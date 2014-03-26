@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8B33A3AD18E2D3CE0006B13B"
-               BuildableName = "YImagePickerDemo.app"
+               BuildableName = "YCameraViewDemo.app"
                BlueprintName = "YCameraViewDemo"
                ReferencedContainer = "container:YCameraViewDemo.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8B33A3AD18E2D3CE0006B13B"
-            BuildableName = "YImagePickerDemo.app"
+            BuildableName = "YCameraViewDemo.app"
             BlueprintName = "YCameraViewDemo"
             ReferencedContainer = "container:YCameraViewDemo.xcodeproj">
          </BuildableReference>
@@ -52,7 +52,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8B33A3AD18E2D3CE0006B13B"
-            BuildableName = "YImagePickerDemo.app"
+            BuildableName = "YCameraViewDemo.app"
             BlueprintName = "YCameraViewDemo"
             ReferencedContainer = "container:YCameraViewDemo.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8B33A3AD18E2D3CE0006B13B"
-            BuildableName = "YImagePickerDemo.app"
+            BuildableName = "YCameraViewDemo.app"
             BlueprintName = "YCameraViewDemo"
             ReferencedContainer = "container:YCameraViewDemo.xcodeproj">
          </BuildableReference>
