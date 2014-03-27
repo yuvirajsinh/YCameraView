@@ -15,8 +15,6 @@ How to Use it
 =============
 
 Import "YCameraViewController.h" in your ViewController.h file where you want to use this.
-
-e.x
 ```objc
 import "YCameraViewController.h"
 
