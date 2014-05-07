@@ -7,7 +7,6 @@
 //
 
 #import "YCameraViewController.h"
-#import "AppDelegate.h"
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
