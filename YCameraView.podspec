@@ -21,8 +21,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/robertibiris/YCameraView.git", :tag => s.version.to_s }
   s.source_files  = "YCameraViewController/**/*.{h,m}"
 
-  s.resources    = "YCameraViewController/UI/**/*.png"
-  s.resource    = "YCameraViewController/YCameraViewController.xib"
+  s.resources    = ["YCameraViewController/UI/**/*.png", "YCameraViewController/YCameraViewController.xib"]
 
   s.frameworks = "AVFoundation"
   s.requires_arc = true
