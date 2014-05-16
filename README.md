@@ -10,6 +10,8 @@ Required Framework
 ==================
 
 AVFoundation.framework
+ImageIO.framework
+CoreMotion.framework
 
 How to Use it
 =============
