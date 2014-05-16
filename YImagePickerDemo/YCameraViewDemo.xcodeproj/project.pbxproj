@@ -40,6 +40,8 @@
 		8B33A40318E2D5550006B13B /* take-snap.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B33A3ED18E2D5550006B13B /* take-snap.png */; };
 		8B33A40418E2D5550006B13B /* take-snap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B33A3EE18E2D5550006B13B /* take-snap@2x.png */; };
 		8B33A40618E2D7E50006B13B /* grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B33A40518E2D7E50006B13B /* grid.png */; };
+		8B480F69192614B0005AA93A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B480F68192614B0005AA93A /* ImageIO.framework */; };
+		8B480F6B192614B9005AA93A /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B480F6A192614B9005AA93A /* CoreMotion.framework */; };
 		8B541C1C18E2DD930074AC55 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B541C1B18E2DD930074AC55 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +85,8 @@
 		8B33A3ED18E2D5550006B13B /* take-snap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "take-snap.png"; sourceTree = "<group>"; };
 		8B33A3EE18E2D5550006B13B /* take-snap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "take-snap@2x.png"; sourceTree = "<group>"; };
 		8B33A40518E2D7E50006B13B /* grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid.png; sourceTree = "<group>"; };
+		8B480F68192614B0005AA93A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		8B480F6A192614B9005AA93A /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		8B541C1B18E2DD930074AC55 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -91,6 +95,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B480F6B192614B9005AA93A /* CoreMotion.framework in Frameworks */,
+				8B480F69192614B0005AA93A /* ImageIO.framework in Frameworks */,
 				8B541C1C18E2DD930074AC55 /* AVFoundation.framework in Frameworks */,
 				8B33A3B318E2D3CE0006B13B /* UIKit.framework in Frameworks */,
 				8B33A3B518E2D3CE0006B13B /* Foundation.framework in Frameworks */,
@@ -121,6 +127,8 @@
 		8B33A3B118E2D3CE0006B13B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8B480F6A192614B9005AA93A /* CoreMotion.framework */,
+				8B480F68192614B0005AA93A /* ImageIO.framework */,
 				8B541C1B18E2DD930074AC55 /* AVFoundation.framework */,
 				8B33A3B218E2D3CE0006B13B /* UIKit.framework */,
 				8B33A3B418E2D3CE0006B13B /* Foundation.framework */,
@@ -335,8 +343,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PROVISIONING_PROFILE = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
+				PROVISIONING_PROFILE = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -359,8 +367,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
+				PROVISIONING_PROFILE = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -375,8 +383,8 @@
 				GCC_PREFIX_HEADER = "YImagePickerDemo/YCameraViewDemo-Prefix.pch";
 				INFOPLIST_FILE = "YImagePickerDemo/YCameraViewDemo-Info.plist";
 				PRODUCT_NAME = YCameraViewDemo;
-				PROVISIONING_PROFILE = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
+				PROVISIONING_PROFILE = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -390,8 +398,8 @@
 				GCC_PREFIX_HEADER = "YImagePickerDemo/YCameraViewDemo-Prefix.pch";
 				INFOPLIST_FILE = "YImagePickerDemo/YCameraViewDemo-Info.plist";
 				PRODUCT_NAME = YCameraViewDemo;
-				PROVISIONING_PROFILE = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "50A47075-0CAE-43D7-9705-F4E6E3C01D84";
+				PROVISIONING_PROFILE = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4680A0C1-3380-4E39-9AF6-D8BF23EC3005";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

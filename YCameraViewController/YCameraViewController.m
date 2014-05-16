@@ -7,11 +7,15 @@
 //
 
 #import "YCameraViewController.h"
+#import "AppDelegate.h"
+#import <ImageIO/ImageIO.h>
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
-@interface YCameraViewController ()
-
+@interface YCameraViewController (){
+    UIInterfaceOrientation orientationLast, orientationAfterProcess;
+    CMMotionManager *motionManager;
+}
 @end
 
 @implementation YCameraViewController
@@ -30,9 +34,9 @@
 {
     [super viewDidLoad];
     
-//    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
-//        self.edgesForExtendedLayout = UIRectEdgeNone;
-//    }
+    //    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
+    //        self.edgesForExtendedLayout = UIRectEdgeNone;
+    //    }
     
     self.navigationController.navigationBarHidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
@@ -40,7 +44,6 @@
 	// Do any additional setup after loading the view.
     pickerDidShow = NO;
     
-    // Today Implementation
     FrontCamera = NO;
     self.captureImage.hidden = YES;
     
@@ -54,6 +57,9 @@
     
     initializeCamera = YES;
     photoFromCam = YES;
+    
+    // Initialize Motion Manager
+    [self initializeMotionManager];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -70,14 +76,14 @@
         // Initialize camera
         [self initializeCamera];
     }
-
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     
-//    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    //    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+    //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void)didReceiveMemoryWarning
@@ -100,8 +106,71 @@
         [captureVideoPreviewLayer release], captureVideoPreviewLayer=nil;
     
     if (stillImageOutput)
-        [stillImageOutput release], stillImageOutput=nil;    
+        [stillImageOutput release], stillImageOutput=nil;
 }
+
+#pragma mark - CoreMotion Task
+- (void)initializeMotionManager{
+    motionManager = [[CMMotionManager alloc] init];
+    motionManager.accelerometerUpdateInterval = .2;
+    motionManager.gyroUpdateInterval = .2;
+    
+    [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
+                                        withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+                                            if (!error) {
+                                                [self outputAccelertionData:accelerometerData.acceleration];
+                                            }
+                                            else{
+                                                NSLog(@"%@", error);
+                                            }
+                                        }];
+}
+
+#pragma mark - UIAccelerometer callback
+
+- (void)outputAccelertionData:(CMAcceleration)acceleration{
+    UIInterfaceOrientation orientationNew;
+    
+    if (acceleration.x >= 0.75) {
+        orientationNew = UIInterfaceOrientationLandscapeLeft;
+    }
+    else if (acceleration.x <= -0.75) {
+        orientationNew = UIInterfaceOrientationLandscapeRight;
+    }
+    else if (acceleration.y <= -0.75) {
+        orientationNew = UIInterfaceOrientationPortrait;
+    }
+    else if (acceleration.y >= 0.75) {
+        orientationNew = UIInterfaceOrientationPortraitUpsideDown;
+    }
+    else {
+        // Consider same as last time
+        return;
+    }
+    
+    if (orientationNew == orientationLast)
+        return;
+    
+    //    NSLog(@"Going from %@ to %@!", [[self class] orientationToText:orientationLast], [[self class] orientationToText:orientationNew]);
+    
+    orientationLast = orientationNew;
+}
+
+#ifdef DEBUG
++(NSString*)orientationToText:(const UIInterfaceOrientation)ORIENTATION {
+    switch (ORIENTATION) {
+        case UIInterfaceOrientationPortrait:
+            return @"UIInterfaceOrientationPortrait";
+        case UIInterfaceOrientationPortraitUpsideDown:
+            return @"UIInterfaceOrientationPortraitUpsideDown";
+        case UIInterfaceOrientationLandscapeLeft:
+            return @"UIInterfaceOrientationLandscapeLeft";
+        case UIInterfaceOrientationLandscapeRight:
+            return @"UIInterfaceOrientationLandscapeRight";
+    }
+    return @"Unknown orientation!";
+}
+#endif
 
 #pragma mark - Camera Initialization
 
@@ -195,7 +264,7 @@
         }
         [session addInput:input];
     }
-     
+    
     if (stillImageOutput)
         [stillImageOutput release], stillImageOutput=nil;
     
@@ -273,7 +342,7 @@
     
     // Resize image to 640x640
     // Resize image
-//    NSLog(@"Image size %@",NSStringFromCGSize(image.size));
+    //    NSLog(@"Image size %@",NSStringFromCGSize(image.size));
     
     UIImage *smallImage = [self imageWithImage:image scaledToWidth:640.0f]; //UIGraphicsGetImageFromCurrentImageContext();
     
@@ -283,35 +352,43 @@
     croppedImageWithoutOrientation = [[UIImage imageWithCGImage:imageRef] copy];
     
     UIImage *croppedImage = nil;
+    //    assetOrientation = ALAssetOrientationUp;
+    
     // adjust image orientation
-    switch ([[UIDevice currentDevice] orientation]) {
-        case UIDeviceOrientationLandscapeLeft:
-            croppedImage = [[[UIImage alloc] initWithCGImage: imageRef
-                                                        scale: 1.0
-                                                  orientation: UIImageOrientationLeft] autorelease];
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            croppedImage = [[[UIImage alloc] initWithCGImage: imageRef
-                                                        scale: 1.0
-                                                  orientation: UIImageOrientationRight] autorelease];
+    NSLog(@"orientation: %d",orientationLast);
+    orientationAfterProcess = orientationLast;
+    switch (orientationLast) {
+        case UIInterfaceOrientationPortrait:
+            NSLog(@"UIInterfaceOrientationPortrait");
+            croppedImage = [UIImage imageWithCGImage:imageRef];
             break;
             
-        case UIDeviceOrientationFaceUp:
+        case UIInterfaceOrientationPortraitUpsideDown:
+            NSLog(@"UIInterfaceOrientationPortraitUpsideDown");
             croppedImage = [[[UIImage alloc] initWithCGImage: imageRef
-                                                        scale: 1.0
-                                                  orientation: UIImageOrientationUp] autorelease];
+                                                       scale: 1.0
+                                                 orientation: UIImageOrientationDown] autorelease];
             break;
-        
-        case UIDeviceOrientationPortraitUpsideDown:
+            
+        case UIInterfaceOrientationLandscapeLeft:
+            NSLog(@"UIInterfaceOrientationLandscapeLeft");
             croppedImage = [[[UIImage alloc] initWithCGImage: imageRef
-                                                      scale: 1.0
-                                                orientation: UIImageOrientationDown] autorelease];
+                                                       scale: 1.0
+                                                 orientation: UIImageOrientationRight] autorelease];
+            break;
+            
+        case UIInterfaceOrientationLandscapeRight:
+            NSLog(@"UIInterfaceOrientationLandscapeRight");
+            croppedImage = [[[UIImage alloc] initWithCGImage: imageRef
+                                                       scale: 1.0
+                                                 orientation: UIImageOrientationLeft] autorelease];
             break;
             
         default:
             croppedImage = [UIImage imageWithCGImage:imageRef];
             break;
     }
+    
     CGImageRelease(imageRef);
     
     [self.captureImage setImage:croppedImage];
@@ -343,13 +420,13 @@
         if (outputImage == nil) {
             outputImage = [info objectForKey:UIImagePickerControllerOriginalImage];
         }
-
+        
         if (outputImage) {
             self.captureImage.hidden = NO;
             self.captureImage.image=outputImage;
             
             [self dismissViewControllerAnimated:YES completion:nil];
-
+            
             // Hide Top/Bottom controller after taking photo for editing
             [self hideControllers];
         }
@@ -383,17 +460,17 @@
         [session stopRunning];
     }
     
-//    self.captureImage = nil;
+    //    self.captureImage = nil;
     
-//    UIImagePickerController* imagePickerController = [[UIImagePickerController alloc] init];
-//    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-//    imagePickerController.delegate = self;
-//    imagePickerController.allowsEditing = YES;
+    //    UIImagePickerController* imagePickerController = [[UIImagePickerController alloc] init];
+    //    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    //    imagePickerController.delegate = self;
+    //    imagePickerController.allowsEditing = YES;
     [self presentViewController:imgPicker animated:YES completion:NULL];
 }
 
 - (IBAction)skipped:(id)sender{
-
+    
     if ([delegate respondsToSelector:@selector(yCameraControllerdidSkipped)]) {
         [delegate yCameraControllerdidSkipped];
     }
@@ -412,11 +489,11 @@
 }
 
 - (IBAction)donePhotoCapture:(id)sender{
-
+    
     if ([delegate respondsToSelector:@selector(didFinishPickingImage:)]) {
         [delegate didFinishPickingImage:self.captureImage.image];
     }
-
+    
     // Dismiss self view controller
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -474,7 +551,7 @@
                     }
                 }
             }
-
+            
         }
         else{                  // Set flash on
             [sender setSelected:YES];
@@ -499,7 +576,7 @@
                     }
                 }
             }
-
+            
         }
     }
 }
