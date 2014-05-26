@@ -28,7 +28,7 @@ import "YCameraViewController.h"
 ```
 In ViewController.m file
 
-To opne YCameraViewController
+To open YCameraViewController
 ```objc
 YCameraViewController *camController = [[YCameraViewController alloc] initWithNibName:@"YCameraViewController" bundle:nil];
 camController.delegate=self;
