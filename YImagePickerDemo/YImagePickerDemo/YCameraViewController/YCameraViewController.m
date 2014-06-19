@@ -43,8 +43,9 @@
 	// Do any additional setup after loading the view.
     pickerDidShow = NO;
     
-    FrontCamera = NO;
+    FrontCamera = SET_DEFAULT_CAMERA_AS_FRONT;
     self.captureImage.hidden = YES;
+    self.cameraToggleButton.selected=SET_DEFAULT_CAMERA_AS_FRONT;
     
     // Setup UIImagePicker Controller
     imgPicker = [[UIImagePickerController alloc] init];
@@ -505,7 +506,7 @@
     [self showControllers];
     
     haveImage=NO;
-    FrontCamera = NO;
+    FrontCamera = SET_DEFAULT_CAMERA_AS_FRONT;
     [self performSelector:@selector(initializeCamera) withObject:nil afterDelay:0.001];
 }
 
