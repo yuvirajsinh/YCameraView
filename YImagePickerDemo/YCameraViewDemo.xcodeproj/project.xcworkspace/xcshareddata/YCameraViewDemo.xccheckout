@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>605D6B37-D5DB-4D79-8F03-8D6CCD2D4ED4</string>
+	<string>48326E8D-F206-4913-9FC9-7BA88C4A51FA</string>
 	<key>IDESourceControlProjectName</key>
 	<string>YCameraViewDemo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>FA9C1341-751B-4575-8DE4-8AC0496C35C0</key>
-		<string>https://github.com/yuvirajsinh/YCameraView.git</string>
+		<key>28189A5A-440F-4BB5-8810-E4809CDEC650</key>
+		<string>https://github.com/pinguo-liuhongwei/YCameraView.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>YImagePickerDemo/YCameraViewDemo.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>FA9C1341-751B-4575-8DE4-8AC0496C35C0</key>
+		<key>28189A5A-440F-4BB5-8810-E4809CDEC650</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/yuvirajsinh/YCameraView.git</string>
+	<string>https://github.com/pinguo-liuhongwei/YCameraView.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>FA9C1341-751B-4575-8DE4-8AC0496C35C0</string>
+	<string>28189A5A-440F-4BB5-8810-E4809CDEC650</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>FA9C1341-751B-4575-8DE4-8AC0496C35C0</string>
+			<string>28189A5A-440F-4BB5-8810-E4809CDEC650</string>
 			<key>IDESourceControlWCCName</key>
 			<string>YCameraView</string>
 		</dict>

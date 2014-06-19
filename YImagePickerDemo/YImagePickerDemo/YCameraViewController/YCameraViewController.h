@@ -27,6 +27,12 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMotion/CoreMotion.h>
 
+#ifdef SET_DEFAULT_CAMERA_AS_FRONT
+#else
+#define SET_DEFAULT_CAMERA_AS_FRONT YES //YES means use front camera as the default camera
+#endif
+
+
 @protocol YCameraViewControllerDelegate;
 
 @interface YCameraViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>{

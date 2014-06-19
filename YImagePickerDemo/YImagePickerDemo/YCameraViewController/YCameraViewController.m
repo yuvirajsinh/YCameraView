@@ -7,7 +7,6 @@
 //
 
 #import "YCameraViewController.h"
-#import "AppDelegate.h"
 #import <ImageIO/ImageIO.h>
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
@@ -44,8 +43,9 @@
 	// Do any additional setup after loading the view.
     pickerDidShow = NO;
     
-    FrontCamera = NO;
+    FrontCamera = SET_DEFAULT_CAMERA_AS_FRONT;
     self.captureImage.hidden = YES;
+    self.cameraToggleButton.selected=SET_DEFAULT_CAMERA_AS_FRONT;
     
     // Setup UIImagePicker Controller
     imgPicker = [[UIImagePickerController alloc] init];
@@ -355,7 +355,7 @@
     //    assetOrientation = ALAssetOrientationUp;
     
     // adjust image orientation
-    NSLog(@"orientation: %d",orientationLast);
+    NSLog(@"orientation: %ld",orientationLast);
     orientationAfterProcess = orientationLast;
     switch (orientationLast) {
         case UIInterfaceOrientationPortrait:
@@ -390,6 +390,12 @@
     }
     
     CGImageRelease(imageRef);
+    
+    if(FrontCamera){
+        croppedImage = [UIImage imageWithCGImage:croppedImage.CGImage
+                                                    scale:croppedImage.scale
+                                              orientation:UIImageOrientationUpMirrored];
+    }
     
     [self.captureImage setImage:croppedImage];
     
@@ -506,7 +512,7 @@
     [self showControllers];
     
     haveImage=NO;
-    FrontCamera = NO;
+    FrontCamera = SET_DEFAULT_CAMERA_AS_FRONT;
     [self performSelector:@selector(initializeCamera) withObject:nil afterDelay:0.001];
 }
 
