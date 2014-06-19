@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#define SET_DEFAULT_CAMERA_AS_FRONT YES
 
 @class ViewController;
 

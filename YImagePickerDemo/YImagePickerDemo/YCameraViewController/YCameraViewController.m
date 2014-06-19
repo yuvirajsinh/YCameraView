@@ -391,6 +391,12 @@
     
     CGImageRelease(imageRef);
     
+    if(FrontCamera){
+        croppedImage = [UIImage imageWithCGImage:croppedImage.CGImage
+                                                    scale:croppedImage.scale
+                                              orientation:UIImageOrientationUpMirrored];
+    }
+    
     [self.captureImage setImage:croppedImage];
     
     [self setCapturedImage];
