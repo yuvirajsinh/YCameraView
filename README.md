@@ -20,7 +20,7 @@ How to Use it
 
 Import "YCameraViewController.h" in your ViewController.h file where you want to use this.
 ```objc
-import "YCameraViewController.h"
+#import "YCameraViewController.h"
 
 @interface ViewController : UIViewController <YCameraViewControllerDelegate>
 
