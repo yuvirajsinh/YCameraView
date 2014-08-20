@@ -44,7 +44,8 @@
     UIImage *croppedImageWithoutOrientation;
 }
 @property (nonatomic, readwrite) BOOL dontAllowResetRestaurant;
-@property (nonatomic, assign) id delegate;
+
+@property (nonatomic, assign) id <YCameraViewControllerDelegate> delegate;
 
 #pragma mark -
 @property (nonatomic, strong) IBOutlet UIButton *photoCaptureButton;
@@ -60,7 +61,7 @@
 
 @end
 
-@protocol YCameraViewControllerDelegate
+@protocol YCameraViewControllerDelegate <NSObject>
 - (void)didFinishPickingImage:(UIImage *)image;
 - (void)yCameraControllerDidCancel;
 - (void)yCameraControllerdidSkipped;
