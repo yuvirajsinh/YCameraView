@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
 
   s.resources    = ["YCameraViewController/UI/**/*.png", "YCameraViewController/YCameraViewController.xib"]
 
-  s.frameworks = "AVFoundation"
+  s.frameworks = "AVFoundation", "ImageIO", "CoreMotion"
   s.requires_arc = true
 
 end
