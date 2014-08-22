@@ -506,7 +506,8 @@
     
     haveImage=NO;
     FrontCamera = NO;
-    [self performSelector:@selector(initializeCamera) withObject:nil afterDelay:0.001];
+//    [self performSelector:@selector(initializeCamera) withObject:nil afterDelay:0.001];
+    [session startRunning];
 }
 
 - (IBAction)switchCamera:(UIButton *)sender { //switch cameras front and rear cameras
