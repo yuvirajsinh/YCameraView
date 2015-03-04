@@ -585,15 +585,27 @@
 #pragma mark - UI Control Helpers
 - (void)hideControllers{
     [UIView animateWithDuration:0.2 animations:^{
+        //1)animate them out of screen
         self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y+116.0);
         self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y-44.0);
+        
+        //2)actually hide them
+        self.photoBar.alpha = 0.0;
+        self.topBar.alpha = 0.0;
+        
     } completion:nil];
 }
 
 - (void)showControllers{
     [UIView animateWithDuration:0.2 animations:^{
+        //1)animate them into screen
         self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y-116.0);
         self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y+44.0);
+        
+        //2)actually show them
+        self.photoBar.alpha = 1.0;
+        self.topBar.alpha = 1.0;
+        
     } completion:nil];
 }
 
