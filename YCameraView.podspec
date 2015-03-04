@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author             = "yuvirajsinh"
   s.platform     = :ios, '7.0'
-  s.source       = { :git => "https://github.com/yuvirajsinh/YCameraView.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/robertibiris/YCameraView.git", :tag => s.version.to_s }
   s.source_files  = "YCameraViewController/**/*.{h,m}"
 
   s.resources    = ["YCameraViewController/UI/**/*.png", "YCameraViewController/YCameraViewController.xib"]
