@@ -43,6 +43,7 @@
 		8B480F69192614B0005AA93A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B480F68192614B0005AA93A /* ImageIO.framework */; };
 		8B480F6B192614B9005AA93A /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B480F6A192614B9005AA93A /* CoreMotion.framework */; };
 		8B541C1C18E2DD930074AC55 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B541C1B18E2DD930074AC55 /* AVFoundation.framework */; };
+		F4AEF9DF1AA7499300333A50 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4AEF9DE1AA7499300333A50 /* Launch Screen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		8B480F68192614B0005AA93A /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		8B480F6A192614B9005AA93A /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		8B541C1B18E2DD930074AC55 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F4AEF9DE1AA7499300333A50 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 				8B33A3C418E2D3CE0006B13B /* Default.png */,
 				8B33A3C618E2D3CE0006B13B /* Default@2x.png */,
 				8B33A3C818E2D3CE0006B13B /* Default-568h@2x.png */,
+				F4AEF9DE1AA7499300333A50 /* Launch Screen.xib */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			files = (
 				8B33A3BD18E2D3CE0006B13B /* InfoPlist.strings in Resources */,
 				8B33A3C518E2D3CE0006B13B /* Default.png in Resources */,
+				F4AEF9DF1AA7499300333A50 /* Launch Screen.xib in Resources */,
 				8B33A3C718E2D3CE0006B13B /* Default@2x.png in Resources */,
 				8B33A3C918E2D3CE0006B13B /* Default-568h@2x.png in Resources */,
 				8B33A3CF18E2D3CE0006B13B /* ViewController.xib in Resources */,
