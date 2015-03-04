@@ -54,12 +54,12 @@
             </variation>
             <variation key="heightClass=compact">
                 <mask key="constraints">
-                    <exclude reference="iht-T3-end"/>
                     <include reference="be3-h0-soA"/>
+                    <exclude reference="iht-T3-end"/>
+                    <exclude reference="28S-Is-Psg"/>
                     <exclude reference="7il-Au-dX2"/>
                     <include reference="8ky-GX-rFQ"/>
                     <include reference="tYE-gg-fqk"/>
-                    <exclude reference="28S-Is-Psg"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="245" y="276"/>
