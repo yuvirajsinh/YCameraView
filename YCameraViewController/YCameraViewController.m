@@ -8,6 +8,7 @@
 
 #import "YCameraViewController.h"
 #import <ImageIO/ImageIO.h>
+#import <AVFoundation/AVFoundation.h>
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
@@ -31,7 +32,6 @@
 @interface YCameraViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
   UIInterfaceOrientation orientationLast, orientationAfterProcess;
-  CMMotionManager *motionManager;
   
   UIImagePickerController *imgPicker;
   BOOL pickerDidShow;
@@ -79,7 +79,7 @@
   self.captureImage.hidden = YES;
   
   // Setup UIImagePicker Controller
-  imgPicker = [[UIImagePickerController alloc] init];
+  imgPicker = [UIImagePickerController new];
   imgPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
   imgPicker.delegate = self;
   imgPicker.allowsEditing = YES;
@@ -90,10 +90,8 @@
   photoFromCam = YES;
 
   if (self.gridInitiallyHidden) {
-    [self gridToogle:self.toggleGridButton]; 
+    [self gridToogle:self.toggleGridButton];
   }
-  
-  [self initializeMotionManager];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -110,7 +108,7 @@
     [session stopRunning];
 }
 
-- (void) dealloc
+- (void)dealloc
 {
     [_imagePreview release];
     [_captureImage release];
@@ -131,70 +129,6 @@
 {
   return _prefersStatusBarHidden;
 }
-
-#pragma mark - CoreMotion Task
-
-- (void)initializeMotionManager{
-    motionManager = [[CMMotionManager alloc] init];
-    motionManager.accelerometerUpdateInterval = .2;
-    motionManager.gyroUpdateInterval = .2;
-    
-    [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
-                                        withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
-                                            if (!error) {
-                                                [self outputAccelertionData:accelerometerData.acceleration];
-                                            }
-                                            else{
-                                                NSLog(@"%@", error);
-                                            }
-                                        }];
-}
-
-#pragma mark - UIAccelerometer callback
-
-- (void)outputAccelertionData:(CMAcceleration)acceleration{
-    UIInterfaceOrientation orientationNew;
-    
-    if (acceleration.x >= 0.75) {
-        orientationNew = UIInterfaceOrientationLandscapeLeft;
-    }
-    else if (acceleration.x <= -0.75) {
-        orientationNew = UIInterfaceOrientationLandscapeRight;
-    }
-    else if (acceleration.y <= -0.75) {
-        orientationNew = UIInterfaceOrientationPortrait;
-    }
-    else if (acceleration.y >= 0.75) {
-        orientationNew = UIInterfaceOrientationPortraitUpsideDown;
-    }
-    else {
-        // Consider same as last time
-        return;
-    }
-    
-    if (orientationNew == orientationLast)
-        return;
-    
-    //    NSLog(@"Going from %@ to %@!", [[self class] orientationToText:orientationLast], [[self class] orientationToText:orientationNew]);
-    
-    orientationLast = orientationNew;
-}
-
-#ifdef DEBUG
-+(NSString*)orientationToText:(const UIInterfaceOrientation)ORIENTATION {
-    switch (ORIENTATION) {
-        case UIInterfaceOrientationPortrait:
-            return @"UIInterfaceOrientationPortrait";
-        case UIInterfaceOrientationPortraitUpsideDown:
-            return @"UIInterfaceOrientationPortraitUpsideDown";
-        case UIInterfaceOrientationLandscapeLeft:
-            return @"UIInterfaceOrientationLandscapeLeft";
-        case UIInterfaceOrientationLandscapeRight:
-            return @"UIInterfaceOrientationLandscapeRight";
-    }
-    return @"Unknown orientation!";
-}
-#endif
 
 #pragma mark - Camera Initialization
 
@@ -464,7 +398,7 @@
 
 #pragma mark - Button clicks
 
-- (IBAction)gridToogle:(UIButton *)sender{
+- (IBAction)gridToogle:(UIButton *)sender {
     if (sender.selected) {
         sender.selected = NO;
         [UIView animateWithDuration:0.2 delay:0.0 options:0 animations:^{

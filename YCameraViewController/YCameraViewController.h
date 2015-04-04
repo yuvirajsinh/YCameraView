@@ -7,8 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
-#import <CoreMotion/CoreMotion.h>
 
 @protocol YCameraViewControllerDelegate;
 
