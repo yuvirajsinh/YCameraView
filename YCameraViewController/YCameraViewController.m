@@ -66,10 +66,10 @@
 {
     [super viewDidLoad];
     
-    //    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
-    //        self.edgesForExtendedLayout = UIRectEdgeNone;
-    //    }
-    
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
+      self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+
     self.navigationController.navigationBarHidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
     
@@ -114,7 +114,7 @@
     //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
--(void) dealloc
+- (void) dealloc
 {
     [_imagePreview release];
     [_captureImage release];
@@ -131,7 +131,13 @@
         [stillImageOutput release], stillImageOutput=nil;
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+  return self.prefersStatusBarHidden;
+}
+
 #pragma mark - CoreMotion Task
+
 - (void)initializeMotionManager{
     motionManager = [[CMMotionManager alloc] init];
     motionManager.accelerometerUpdateInterval = .2;

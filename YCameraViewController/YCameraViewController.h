@@ -16,6 +16,7 @@
 @interface YCameraViewController : UIViewController
 
 @property (nonatomic, assign) id <YCameraViewControllerDelegate> delegate;
+@property (nonatomic, assign) BOOL prefersStatusBarHidden;
 
 @property (nonatomic, strong) IBOutlet UIButton *photoCaptureButton;
 @property (nonatomic, strong) IBOutlet UIButton *cancelButton;
