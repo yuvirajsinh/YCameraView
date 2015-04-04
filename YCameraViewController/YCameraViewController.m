@@ -512,8 +512,8 @@
 
 - (IBAction)donePhotoCapture:(id)sender{
     
-    if ([self.delegate respondsToSelector:@selector(didFinishPickingImage:)]) {
-        [self.delegate didFinishPickingImage:self.captureImage.image];
+    if ([self.delegate respondsToSelector:@selector(yCameraControllerDidFinishPickingImage:)]) {
+        [self.delegate yCameraControllerDidFinishPickingImage:self.captureImage.image];
     }
     
     // Dismiss self view controller

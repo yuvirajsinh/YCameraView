@@ -33,7 +33,7 @@
 
 @protocol YCameraViewControllerDelegate <NSObject>
 
-- (void)didFinishPickingImage:(UIImage *)image;
+- (void)yCameraControllerDidFinishPickingImage:(UIImage *)image;
 - (void)yCameraControllerDidCancel;
 - (void)yCameraControllerdidSkipped;
 
