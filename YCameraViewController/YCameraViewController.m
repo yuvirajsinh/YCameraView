@@ -11,20 +11,53 @@
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
-@interface YCameraViewController (){
-    UIInterfaceOrientation orientationLast, orientationAfterProcess;
-    CMMotionManager *motionManager;
+
+//  ARC Helper
+#ifndef ah_retain
+#if __has_feature(objc_arc)
+#define ah_retain self
+#define ah_dealloc self
+#define release self
+#define autorelease self
+#else
+#define ah_retain retain
+#define ah_dealloc dealloc
+#define __bridge
+#endif
+#endif
+//  ARC Helper ends
+
+
+@interface YCameraViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+{
+  UIInterfaceOrientation orientationLast, orientationAfterProcess;
+  CMMotionManager *motionManager;
+  
+  UIImagePickerController *imgPicker;
+  BOOL pickerDidShow;
+  
+  BOOL FrontCamera;
+  BOOL haveImage;
+  BOOL initializeCamera, photoFromCam;
+  AVCaptureSession *session;
+  AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
+  AVCaptureStillImageOutput *stillImageOutput;
+  UIImage *croppedImageWithoutOrientation;
 }
 @end
 
-@implementation YCameraViewController
-@synthesize delegate;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+@implementation YCameraViewController
+
+- (instancetype)init
+{
+  return [[YCameraViewController alloc] initWithNibName:@"YCameraViewController" bundle:nil];
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -56,8 +89,7 @@
     
     initializeCamera = YES;
     photoFromCam = YES;
-    
-    // Initialize Motion Manager
+  
     [self initializeMotionManager];
 }
 
@@ -71,11 +103,8 @@
     
     if (initializeCamera){
         initializeCamera = NO;
-        
-        // Initialize camera
         [self initializeCamera];
     }
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -83,12 +112,6 @@
     [session stopRunning];
     //    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
     //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 -(void) dealloc
@@ -470,8 +493,8 @@
 
 - (IBAction)skipped:(id)sender{
     
-    if ([delegate respondsToSelector:@selector(yCameraControllerdidSkipped)]) {
-        [delegate yCameraControllerdidSkipped];
+    if ([self.delegate respondsToSelector:@selector(yCameraControllerdidSkipped)]) {
+        [self.delegate yCameraControllerdidSkipped];
     }
     
     // Dismiss self view controller
@@ -479,8 +502,8 @@
 }
 
 -(IBAction) cancel:(id)sender {
-    if ([delegate respondsToSelector:@selector(yCameraControllerDidCancel)]) {
-        [delegate yCameraControllerDidCancel];
+    if ([self.delegate respondsToSelector:@selector(yCameraControllerDidCancel)]) {
+        [self.delegate yCameraControllerDidCancel];
     }
     
     // Dismiss self view controller
@@ -489,8 +512,8 @@
 
 - (IBAction)donePhotoCapture:(id)sender{
     
-    if ([delegate respondsToSelector:@selector(didFinishPickingImage:)]) {
-        [delegate didFinishPickingImage:self.captureImage.image];
+    if ([self.delegate respondsToSelector:@selector(didFinishPickingImage:)]) {
+        [self.delegate didFinishPickingImage:self.captureImage.image];
     }
     
     // Dismiss self view controller
