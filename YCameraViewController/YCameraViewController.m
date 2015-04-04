@@ -9,6 +9,7 @@
 #import "YCameraViewController.h"
 #import <ImageIO/ImageIO.h>
 #import <AVFoundation/AVFoundation.h>
+#import <CoreMotion/CoreMotion.h>
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
@@ -32,6 +33,12 @@
 @interface YCameraViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
   UIInterfaceOrientation orientationLast, orientationAfterProcess;
+  
+  /**
+   This is used so that photos taken in landscape are rotated to portrait. Not sure why accelerator reading is used (instead of
+   UIDeviceOrientationDidChangeNotification).
+   */
+  CMMotionManager *motionManager;
   
   UIImagePickerController *imgPicker;
   BOOL pickerDidShow;
@@ -89,6 +96,8 @@
   initializeCamera = YES;
   photoFromCam = YES;
 
+  [self initializeMotionManager];
+  
   if (self.gridInitiallyHidden) {
     [self gridToogle:self.toggleGridButton];
   }
@@ -129,6 +138,70 @@
 {
   return _prefersStatusBarHidden;
 }
+
+#pragma mark - CoreMotion Task
+
+- (void)initializeMotionManager{
+  motionManager = [[CMMotionManager alloc] init];
+  motionManager.accelerometerUpdateInterval = .2;
+  motionManager.gyroUpdateInterval = .2;
+  
+  [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
+                                      withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+                                        if (!error) {
+                                          [self outputAccelertionData:accelerometerData.acceleration];
+                                        }
+                                        else{
+                                          NSLog(@"%@", error);
+                                        }
+                                      }];
+}
+
+#pragma mark - UIAccelerometer callback
+
+- (void)outputAccelertionData:(CMAcceleration)acceleration{
+  UIInterfaceOrientation orientationNew;
+  
+  if (acceleration.x >= 0.75) {
+    orientationNew = UIInterfaceOrientationLandscapeLeft;
+  }
+  else if (acceleration.x <= -0.75) {
+    orientationNew = UIInterfaceOrientationLandscapeRight;
+  }
+  else if (acceleration.y <= -0.75) {
+    orientationNew = UIInterfaceOrientationPortrait;
+  }
+  else if (acceleration.y >= 0.75) {
+    orientationNew = UIInterfaceOrientationPortraitUpsideDown;
+  }
+  else {
+    // Consider same as last time
+    return;
+  }
+  
+  if (orientationNew == orientationLast)
+    return;
+  
+  //    NSLog(@"Going from %@ to %@!", [[self class] orientationToText:orientationLast], [[self class] orientationToText:orientationNew]);
+  
+  orientationLast = orientationNew;
+}
+
+#ifdef DEBUG
++(NSString*)orientationToText:(const UIInterfaceOrientation)ORIENTATION {
+  switch (ORIENTATION) {
+    case UIInterfaceOrientationPortrait:
+      return @"UIInterfaceOrientationPortrait";
+    case UIInterfaceOrientationPortraitUpsideDown:
+      return @"UIInterfaceOrientationPortraitUpsideDown";
+    case UIInterfaceOrientationLandscapeLeft:
+      return @"UIInterfaceOrientationLandscapeLeft";
+    case UIInterfaceOrientationLandscapeRight:
+      return @"UIInterfaceOrientationLandscapeRight";
+  }
+  return @"Unknown orientation!";
+}
+#endif
 
 #pragma mark - Camera Initialization
 
@@ -532,17 +605,29 @@
 
 #pragma mark - UI Control Helpers
 - (void)hideControllers{
-    [UIView animateWithDuration:0.2 animations:^{
-        self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y+116.0);
-        self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y-44.0);
-    } completion:nil];
+  [UIView animateWithDuration:0.2 animations:^{
+    //1)animate them out of screen
+    self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y+116.0);
+    self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y-44.0);
+    
+    //2)actually hide them
+    self.photoBar.alpha = 0.0;
+    self.topBar.alpha = 0.0;
+    
+  } completion:nil];
 }
 
 - (void)showControllers{
-    [UIView animateWithDuration:0.2 animations:^{
-        self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y-116.0);
-        self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y+44.0);
-    } completion:nil];
+  [UIView animateWithDuration:0.2 animations:^{
+    //1)animate them into screen
+    self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y-116.0);
+    self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y+44.0);
+    
+    //2)actually show them
+    self.photoBar.alpha = 1.0;
+    self.topBar.alpha = 1.0;
+    
+  } completion:nil];
 }
 
 @end
