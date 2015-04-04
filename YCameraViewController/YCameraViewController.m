@@ -65,15 +65,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
-      self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-
+  
     self.navigationController.navigationBarHidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
     
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
     pickerDidShow = NO;
     
     FrontCamera = NO;
@@ -110,8 +106,6 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [session stopRunning];
-    //    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-    //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void) dealloc
@@ -133,7 +127,7 @@
 
 - (BOOL)prefersStatusBarHidden
 {
-  return self.prefersStatusBarHidden;
+  return _prefersStatusBarHidden;
 }
 
 #pragma mark - CoreMotion Task
@@ -487,13 +481,6 @@
     if (session) {
         [session stopRunning];
     }
-    
-    //    self.captureImage = nil;
-    
-    //    UIImagePickerController* imagePickerController = [[UIImagePickerController alloc] init];
-    //    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    //    imagePickerController.delegate = self;
-    //    imagePickerController.allowsEditing = YES;
     [self presentViewController:imgPicker animated:YES completion:NULL];
 }
 
@@ -502,8 +489,6 @@
     if ([self.delegate respondsToSelector:@selector(yCameraControllerdidSkipped)]) {
         [self.delegate yCameraControllerdidSkipped];
     }
-    
-    // Dismiss self view controller
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -511,8 +496,7 @@
     if ([self.delegate respondsToSelector:@selector(yCameraControllerDidCancel)]) {
         [self.delegate yCameraControllerDidCancel];
     }
-    
-    // Dismiss self view controller
+  
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -521,8 +505,7 @@
     if ([self.delegate respondsToSelector:@selector(yCameraControllerDidFinishPickingImage:)]) {
         [self.delegate yCameraControllerDidFinishPickingImage:self.captureImage.image];
     }
-    
-    // Dismiss self view controller
+  
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -530,7 +513,7 @@
     [self.photoCaptureButton setEnabled:YES];
     self.captureImage.image = nil;
     self.imagePreview.hidden = NO;
-    // Show Camera device controls
+  
     [self showControllers];
     
     haveImage=NO;
