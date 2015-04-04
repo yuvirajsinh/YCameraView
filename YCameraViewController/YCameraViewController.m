@@ -435,7 +435,15 @@
     [self hideControllers];
 }
 
+#pragma mark - Accessors
+
+- (BOOL)gridEnabled
+{
+  return !(self.toggleGridButton.selected);
+}
+
 #pragma mark - Device Availability Controls
+
 - (void)disableCameraDeviceControls{
     self.cameraToggleButton.enabled = NO;
     self.flashToggleButton.enabled = NO;
@@ -487,39 +495,34 @@
 }
 
 -(IBAction)switchToLibrary:(id)sender {
-    
-    if (session) {
-        [session stopRunning];
-    }
-    [self presentViewController:imgPicker animated:YES completion:NULL];
+  if (session) {
+    [session stopRunning];
+  }
+  [self presentViewController:imgPicker animated:YES completion:NULL];
 }
 
-- (IBAction)skipped:(id)sender{
-    
-    if ([self.delegate respondsToSelector:@selector(yCameraControllerdidSkipped)]) {
-        [self.delegate yCameraControllerdidSkipped];
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (IBAction)skipped:(id)sender {
+  if ([self.delegate respondsToSelector:@selector(yCameraControllerdidSkipped:)]) {
+    [self.delegate yCameraControllerdidSkipped:self];
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(IBAction) cancel:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(yCameraControllerDidCancel)]) {
-        [self.delegate yCameraControllerDidCancel];
-    }
-  
-    [self dismissViewControllerAnimated:YES completion:nil];
+  if ([self.delegate respondsToSelector:@selector(yCameraControllerDidCancel:)]) {
+    [self.delegate yCameraControllerDidCancel:self];
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)donePhotoCapture:(id)sender{
-    
-    if ([self.delegate respondsToSelector:@selector(yCameraControllerDidFinishPickingImage:)]) {
-        [self.delegate yCameraControllerDidFinishPickingImage:self.captureImage.image];
-    }
-  
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (IBAction)donePhotoCapture:(id)sender {
+  if ([self.delegate respondsToSelector:@selector(yCameraController:didFinishPickingImage:)]) {
+    [self.delegate yCameraController:self didFinishPickingImage:self.captureImage.image];
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)retakePhoto:(id)sender{
+- (IBAction)retakePhoto:(id)sender {
     [self.photoCaptureButton setEnabled:YES];
     self.captureImage.image = nil;
     self.imagePreview.hidden = NO;

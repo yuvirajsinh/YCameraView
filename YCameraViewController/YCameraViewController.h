@@ -28,14 +28,16 @@
 @property (retain, nonatomic) IBOutlet UIView *imagePreview;
 @property (retain, nonatomic) IBOutlet UIImageView *captureImage;
 
+- (BOOL)gridEnabled;
+
 @end
 
 
 @protocol YCameraViewControllerDelegate <NSObject>
 
 @optional
-- (void)yCameraControllerDidFinishPickingImage:(UIImage *)image;
-- (void)yCameraControllerDidCancel;
-- (void)yCameraControllerdidSkipped;
+- (void)yCameraController:(YCameraViewController *)cameraController didFinishPickingImage:(UIImage *)image;
+- (void)yCameraControllerDidCancel:(YCameraViewController *)cameraController;
+- (void)yCameraControllerdidSkipped:(YCameraViewController *)cameraController;
 
 @end
