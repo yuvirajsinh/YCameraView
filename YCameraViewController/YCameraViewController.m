@@ -44,6 +44,9 @@
   AVCaptureStillImageOutput *stillImageOutput;
   UIImage *croppedImageWithoutOrientation;
 }
+
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *toggleGridButton;
+
 @end
 
 
@@ -64,34 +67,33 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-  
-    self.navigationController.navigationBarHidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-    
-    // Do any additional setup after loading the view.
-    pickerDidShow = NO;
-    
-    FrontCamera = NO;
-    self.captureImage.hidden = YES;
-    
-    // Setup UIImagePicker Controller
-    imgPicker = [[UIImagePickerController alloc] init];
-    imgPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imgPicker.delegate = self;
-    imgPicker.allowsEditing = YES;
-    
-    croppedImageWithoutOrientation = [[UIImage alloc] init];
-    
-    initializeCamera = YES;
-    photoFromCam = YES;
-  
-    [self initializeMotionManager];
-}
+  [super viewDidLoad];
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+  self.navigationController.navigationBarHidden = YES;
+  [self.navigationController setNavigationBarHidden:YES];
+  
+  // Do any additional setup after loading the view.
+  pickerDidShow = NO;
+  
+  FrontCamera = NO;
+  self.captureImage.hidden = YES;
+  
+  // Setup UIImagePicker Controller
+  imgPicker = [[UIImagePickerController alloc] init];
+  imgPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+  imgPicker.delegate = self;
+  imgPicker.allowsEditing = YES;
+  
+  croppedImageWithoutOrientation = [[UIImage alloc] init];
+  
+  initializeCamera = YES;
+  photoFromCam = YES;
+
+  if (self.gridInitiallyHidden) {
+    [self gridToogle:self.toggleGridButton]; 
+  }
+  
+  [self initializeMotionManager];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -461,6 +463,7 @@
 }
 
 #pragma mark - Button clicks
+
 - (IBAction)gridToogle:(UIButton *)sender{
     if (sender.selected) {
         sender.selected = NO;
