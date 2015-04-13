@@ -139,6 +139,11 @@
   return _prefersStatusBarHidden;
 }
 
+- (BOOL)shouldAutorotate
+{
+  return _shouldAutorotate;
+}
+
 #pragma mark - CoreMotion Task
 
 - (void)initializeMotionManager{
