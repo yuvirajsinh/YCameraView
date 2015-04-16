@@ -39,6 +39,6 @@
 @optional
 - (void)yCameraController:(YCameraViewController *)cameraController didFinishPickingImage:(UIImage *)image;
 - (void)yCameraControllerDidCancel:(YCameraViewController *)cameraController;
-- (void)yCameraControllerdidSkipped:(YCameraViewController *)cameraController;
+- (void)yCameraControllerDidSkip:(YCameraViewController *)cameraController;
 
 @end

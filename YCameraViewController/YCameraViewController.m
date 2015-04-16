@@ -508,7 +508,7 @@
 
 - (IBAction)skipped:(id)sender {
   if ([self.delegate respondsToSelector:@selector(yCameraControllerdidSkipped:)]) {
-    [self.delegate yCameraControllerdidSkipped:self];
+    [self.delegate yCameraControllerDidSkip:self];
   }
   [self dismissViewControllerAnimated:YES completion:nil];
 }
