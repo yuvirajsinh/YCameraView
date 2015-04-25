@@ -7,6 +7,7 @@
 //
 
 #import "YCameraViewController.h"
+#import "FlashButtonController.h"
 #import <ImageIO/ImageIO.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMotion/CoreMotion.h>
@@ -53,6 +54,7 @@
 }
 
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *toggleGridButton;
+@property (strong, nonatomic) FlashButtonController* flashButtonController;
 
 @end
 
@@ -101,6 +103,19 @@
   if (self.gridInitiallyHidden) {
     [self gridToogle:self.toggleGridButton];
   }
+  
+  [self setupFlashButton];
+}
+
+- (void)setupFlashButton
+{
+  self.flashButtonController = [[FlashButtonController alloc] initWithButton:self.flashToggleButton];
+  __weak typeof(self) weakSelf = self;
+  self.flashButtonController.buttonPressedBlock = ^() {
+    [weakSelf toggleFlash:nil];
+    [weakSelf updateFlashButtonImage];
+  };
+  [self updateFlashButtonImage];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -266,10 +281,7 @@
         
         if ([backCamera hasFlash]){
             [backCamera lockForConfiguration:nil];
-            if (self.flashToggleButton.selected)
-                [backCamera setFlashMode:AVCaptureFlashModeOn];
-            else
-                [backCamera setFlashMode:AVCaptureFlashModeOff];
+            [backCamera setFlashMode:self.flashButtonController.flashMode];
             [backCamera unlockForConfiguration];
             
             [self.flashToggleButton setEnabled:YES];
@@ -372,7 +384,7 @@
     return newImage;
 }
 
-- (void) processImage:(UIImage *)image { //process captured image, crop, resize and rotate
+- (void)processImage:(UIImage *)image { //process captured image, crop, resize and rotate
     haveImage = YES;
     photoFromCam = YES;
     
@@ -513,7 +525,7 @@
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(IBAction) cancel:(id)sender {
+-(IBAction)cancel:(id)sender {
   if ([self.delegate respondsToSelector:@selector(yCameraControllerDidCancel:)]) {
     [self.delegate yCameraControllerDidCancel:self];
   }
@@ -556,59 +568,52 @@
     }
 }
 
-- (IBAction)toogleFlash:(UIButton *)sender{
-    if (!FrontCamera) {
-        if (sender.selected) { // Set flash off
-            [sender setSelected:NO];
-            
-            NSArray *devices = [AVCaptureDevice devices];
-            for (AVCaptureDevice *device in devices) {
-                
-                NSLog(@"Device name: %@", [device localizedName]);
-                
-                if ([device hasMediaType:AVMediaTypeVideo]) {
-                    
-                    if ([device position] == AVCaptureDevicePositionBack) {
-                        NSLog(@"Device position : back");
-                        if ([device hasFlash]){
-                            
-                            [device lockForConfiguration:nil];
-                            [device setFlashMode:AVCaptureFlashModeOff];
-                            [device unlockForConfiguration];
-                            
-                            break;
-                        }
-                    }
-                }
-            }
-            
+- (void)toggleFlash:(id)sender {
+  if (FrontCamera) {
+    return;
+  }
+  
+  NSArray *devices = [AVCaptureDevice devices];
+  for (AVCaptureDevice *device in devices) {
+    
+    NSLog(@"Device name: %@", [device localizedName]);
+    
+    if ([device hasMediaType:AVMediaTypeVideo]) {
+      
+      if ([device position] == AVCaptureDevicePositionBack) {
+        NSLog(@"Device position : back");
+        if ([device hasFlash]){
+          
+          [device lockForConfiguration:nil];
+          [device setFlashMode:self.flashButtonController.flashMode];
+          [device unlockForConfiguration];
+          
+          break;
         }
-        else{                  // Set flash on
-            [sender setSelected:YES];
-            
-            NSArray *devices = [AVCaptureDevice devices];
-            for (AVCaptureDevice *device in devices) {
-                
-                NSLog(@"Device name: %@", [device localizedName]);
-                
-                if ([device hasMediaType:AVMediaTypeVideo]) {
-                    
-                    if ([device position] == AVCaptureDevicePositionBack) {
-                        NSLog(@"Device position : back");
-                        if ([device hasFlash]){
-                            
-                            [device lockForConfiguration:nil];
-                            [device setFlashMode:AVCaptureFlashModeOn];
-                            [device unlockForConfiguration];
-                            
-                            break;
-                        }
-                    }
-                }
-            }
-            
-        }
+      }
     }
+  }
+}
+
+- (void)updateFlashButtonImage
+{
+  NSString *imageName;
+  
+  switch (self.flashButtonController.state) {
+    case FlashButtonStateAuto: {
+      imageName = @"flash-auto";
+      break;
+    }
+    case FlashButtonStateOn: {
+      imageName = @"flash";
+      break;
+    }
+    case FlashButtonStateOff: {
+      imageName = @"flash-off";
+      break;
+    }
+  }
+  [self.flashToggleButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
 }
 
 #pragma mark - UI Control Helpers
