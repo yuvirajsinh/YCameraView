@@ -11,6 +11,7 @@
                 <outlet property="cameraToggleButton" destination="37" id="48"/>
                 <outlet property="cancelButton" destination="36" id="44"/>
                 <outlet property="captureImage" destination="h5e-Bx-TvZ" id="GzU-XD-Z0h"/>
+                <outlet property="confirmPhotoBar" destination="BAP-tb-Uiy" id="Efq-Y8-6Cu"/>
                 <outlet property="flashToggleButton" destination="77" id="78"/>
                 <outlet property="imagePreview" destination="UiP-kv-PWi" id="7CM-Yk-s5w"/>
                 <outlet property="libraryToggleButton" destination="83" id="88"/>
@@ -45,49 +46,6 @@
                         <constraint firstAttribute="width" secondItem="RLN-fp-ON5" secondAttribute="height" multiplier="1:1" id="5hh-sc-Svf"/>
                     </constraints>
                 </imageView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BAP-tb-Uiy" userLabel="ConfirmPhoto toolbar">
-                    <rect key="frame" x="0.0" y="0.0" width="365" height="44"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uR1-wS-tZk">
-                            <rect key="frame" x="10" y="2" width="50" height="40"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="uR1-wS-tZk" secondAttribute="height" multiplier="5:4" id="1yu-FL-viD"/>
-                                <constraint firstAttribute="width" constant="50" id="vST-Ib-e2h"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <state key="normal" title="Retake">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="retakePhoto:" destination="-1" eventType="touchUpInside" id="FAv-er-Wcp"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1zT-OA-N2D">
-                            <rect key="frame" x="305" y="2" width="50" height="40"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="50" id="Bui-7k-lYH"/>
-                                <constraint firstAttribute="width" secondItem="1zT-OA-N2D" secondAttribute="height" multiplier="5:4" id="dKU-3e-LMb"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                            <state key="normal" title="Done">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="donePhotoCapture:" destination="-1" eventType="touchUpInside" id="5i1-NJ-mbh"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstItem="uR1-wS-tZk" firstAttribute="leading" secondItem="BAP-tb-Uiy" secondAttribute="leading" constant="10" id="ayt-Yi-JCV"/>
-                        <constraint firstAttribute="height" constant="44" id="dwP-f5-dnO"/>
-                        <constraint firstItem="1zT-OA-N2D" firstAttribute="top" secondItem="BAP-tb-Uiy" secondAttribute="top" constant="2" id="oVm-pT-ebu"/>
-                        <constraint firstAttribute="trailing" secondItem="1zT-OA-N2D" secondAttribute="trailing" constant="10" id="oht-0K-jYi"/>
-                        <constraint firstItem="uR1-wS-tZk" firstAttribute="top" secondItem="BAP-tb-Uiy" secondAttribute="top" constant="2" id="ue6-3v-zgR"/>
-                    </constraints>
-                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="34" userLabel="Photo tools toolbar">
                     <rect key="frame" x="0.0" y="0.0" width="365" height="44"/>
                     <subviews>
@@ -175,6 +133,49 @@
                         <constraint firstItem="37" firstAttribute="top" secondItem="34" secondAttribute="top" constant="3" id="tcl-TH-DBn"/>
                     </constraints>
                 </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BAP-tb-Uiy" userLabel="ConfirmPhoto toolbar">
+                    <rect key="frame" x="0.0" y="566" width="365" height="92"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uR1-wS-tZk">
+                            <rect key="frame" x="10" y="14" width="80" height="64"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="uR1-wS-tZk" secondAttribute="height" multiplier="5:4" id="1yu-FL-viD"/>
+                                <constraint firstAttribute="width" constant="80" id="vST-Ib-e2h"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                            <state key="normal" title="Retake">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="retakePhoto:" destination="-1" eventType="touchUpInside" id="FAv-er-Wcp"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1zT-OA-N2D">
+                            <rect key="frame" x="275" y="14" width="80" height="64"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="80" id="Bui-7k-lYH"/>
+                                <constraint firstAttribute="width" secondItem="1zT-OA-N2D" secondAttribute="height" multiplier="5:4" id="dKU-3e-LMb"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                            <state key="normal" title="Done">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="donePhotoCapture:" destination="-1" eventType="touchUpInside" id="5i1-NJ-mbh"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.078431372549019607" green="0.078431372549019607" blue="0.078431372549019607" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="centerY" secondItem="uR1-wS-tZk" secondAttribute="centerY" id="OvD-4R-QdN"/>
+                        <constraint firstItem="uR1-wS-tZk" firstAttribute="leading" secondItem="BAP-tb-Uiy" secondAttribute="leading" constant="10" id="ayt-Yi-JCV"/>
+                        <constraint firstAttribute="height" constant="92" id="dwP-f5-dnO"/>
+                        <constraint firstAttribute="trailing" secondItem="1zT-OA-N2D" secondAttribute="trailing" constant="10" id="oht-0K-jYi"/>
+                        <constraint firstAttribute="centerY" secondItem="1zT-OA-N2D" secondAttribute="centerY" id="u3K-F7-onM"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31" userLabel="Take Photo toolbar">
                     <rect key="frame" x="0.0" y="542" width="365" height="116"/>
                     <subviews>
@@ -251,7 +252,6 @@
             <constraints>
                 <constraint firstItem="h5e-Bx-TvZ" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="1IS-B6-jDK"/>
                 <constraint firstItem="RLN-fp-ON5" firstAttribute="top" secondItem="34" secondAttribute="bottom" constant="45" id="47h-ib-jwo"/>
-                <constraint firstItem="BAP-tb-Uiy" firstAttribute="top" secondItem="4" secondAttribute="top" id="8oe-Dz-81E"/>
                 <constraint firstAttribute="bottom" secondItem="31" secondAttribute="bottom" id="A3u-p6-Od0"/>
                 <constraint firstItem="h5e-Bx-TvZ" firstAttribute="top" secondItem="34" secondAttribute="bottom" constant="45" id="CnP-Kf-OM3"/>
                 <constraint firstItem="34" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="CqO-Ym-uP7"/>
@@ -265,6 +265,7 @@
                 <constraint firstAttribute="trailing" secondItem="31" secondAttribute="trailing" id="fRE-CG-a5C"/>
                 <constraint firstAttribute="trailing" secondItem="h5e-Bx-TvZ" secondAttribute="trailing" id="lNa-On-tJc"/>
                 <constraint firstAttribute="trailing" secondItem="RLN-fp-ON5" secondAttribute="trailing" id="w81-6c-PTs"/>
+                <constraint firstAttribute="bottom" secondItem="BAP-tb-Uiy" secondAttribute="bottom" id="xbI-wR-IxU"/>
                 <constraint firstItem="RLN-fp-ON5" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="yIo-2f-wOv"/>
                 <constraint firstItem="31" firstAttribute="leading" secondItem="4" secondAttribute="leading" id="yau-nM-wW1"/>
             </constraints>

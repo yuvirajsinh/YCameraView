@@ -55,6 +55,7 @@
 
 @property (unsafe_unretained, nonatomic) IBOutlet UIButton *toggleGridButton;
 @property (strong, nonatomic) FlashButtonController* flashButtonController;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *confirmPhotoBar;
 
 @end
 
@@ -450,6 +451,8 @@
     
     // Hide Top/Bottom controller after taking photo for editing
     [self hideControllers];
+  
+    [self showConfirmPhotoBar];
 }
 
 #pragma mark - Accessors
@@ -551,7 +554,8 @@
     self.imagePreview.hidden = NO;
   
     [self showControllers];
-    
+    [self hideConfirmPhotoBar];
+  
     haveImage=NO;
     FrontCamera = NO;
 //    [self performSelector:@selector(initializeCamera) withObject:nil afterDelay:0.001];
@@ -623,6 +627,7 @@
 }
 
 #pragma mark - UI Control Helpers
+
 - (void)hideControllers{
   [UIView animateWithDuration:0.2 animations:^{
     //1)animate them out of screen
@@ -647,6 +652,16 @@
     self.topBar.alpha = 1.0;
     
   } completion:nil];
+}
+
+- (void)showConfirmPhotoBar
+{
+  self.confirmPhotoBar.hidden = NO;
+}
+
+- (void)hideConfirmPhotoBar
+{
+  self.confirmPhotoBar.hidden = YES;
 }
 
 @end
