@@ -497,17 +497,23 @@
 #pragma mark - Button clicks
 
 - (IBAction)gridToogle:(UIButton *)sender {
+    CGFloat gridToggleAnimationDuration = 0.2;
+  
     if (sender.selected) {
         sender.selected = NO;
-        [UIView animateWithDuration:0.2 delay:0.0 options:0 animations:^{
+        [UIView animateWithDuration:gridToggleAnimationDuration delay:0.0 options:0 animations:^{
             self.ImgViewGrid.alpha = 1.0f;
         } completion:nil];
     }
     else{
         sender.selected = YES;
-        [UIView animateWithDuration:0.2 delay:0.0 options:0 animations:^{
+        [UIView animateWithDuration:gridToggleAnimationDuration delay:0.0 options:0 animations:^{
             self.ImgViewGrid.alpha = 0.0f;
         } completion:nil];
+    }
+  
+    if ([self.delegate respondsToSelector:@selector(yCameraController:didToggleGridEnabled:)]) {
+        [self.delegate yCameraController:self didToggleGridEnabled:sender.selected];
     }
 }
 

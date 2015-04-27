@@ -40,5 +40,6 @@
 - (void)yCameraController:(YCameraViewController *)cameraController didFinishPickingImage:(UIImage *)image;
 - (void)yCameraControllerDidCancel:(YCameraViewController *)cameraController;
 - (void)yCameraControllerDidSkip:(YCameraViewController *)cameraController;
+- (void)yCameraController:(YCameraViewController *)cameraController didToggleGridEnabled:(BOOL)gridEnabled;
 
 @end
