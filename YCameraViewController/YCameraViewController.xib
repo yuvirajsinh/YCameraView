@@ -177,10 +177,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="31" userLabel="Take Photo toolbar">
-                    <rect key="frame" x="0.0" y="493" width="320" height="75"/>
+                    <rect key="frame" x="0.0" y="473" width="320" height="95"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="32" userLabel="TakePicture Button">
-                            <rect key="frame" x="128" y="5" width="65" height="65"/>
+                            <rect key="frame" x="128" y="15" width="65" height="65"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="65" id="QyI-PV-TCk"/>
                                 <constraint firstAttribute="width" secondItem="32" secondAttribute="height" multiplier="1:1" id="WV7-wH-iNu"/>
@@ -198,7 +198,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lCz-vv-NSh" userLabel="Cancel button">
-                            <rect key="frame" x="10" y="27" width="65" height="22"/>
+                            <rect key="frame" x="10" y="37" width="65" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="65" id="JAV-Kz-n7e"/>
                                 <constraint firstAttribute="width" secondItem="lCz-vv-NSh" secondAttribute="height" multiplier="70:24" id="Kjb-8y-x86"/>
@@ -217,7 +217,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="83" userLabel="Library Button">
-                            <rect key="frame" x="222" y="19" width="65" height="37"/>
+                            <rect key="frame" x="222" y="29" width="65" height="37"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="65" id="IVu-ga-C4o"/>
                                 <constraint firstAttribute="width" secondItem="83" secondAttribute="height" multiplier="65:37" id="pAc-AI-bbe"/>
@@ -238,7 +238,7 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="75" id="0ez-E6-8Qu"/>
+                        <constraint firstAttribute="height" constant="95" id="0ez-E6-8Qu"/>
                         <constraint firstItem="32" firstAttribute="leading" secondItem="lCz-vv-NSh" secondAttribute="trailing" constant="53" id="J3i-do-Njy"/>
                         <constraint firstAttribute="centerX" secondItem="32" secondAttribute="centerX" constant="-0.5" id="P6E-Dd-3yr"/>
                         <constraint firstItem="83" firstAttribute="leading" secondItem="32" secondAttribute="trailing" constant="29" id="UyQ-oe-SeP"/>
