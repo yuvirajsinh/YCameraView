@@ -114,9 +114,17 @@
   __weak typeof(self) weakSelf = self;
   self.flashButtonController.buttonPressedBlock = ^() {
     [weakSelf toggleFlash:nil];
-    [weakSelf updateFlashButtonImage];
+    [weakSelf updateFlashButtonStateText];
   };
-  [self updateFlashButtonImage];
+  [self updateFlashButtonStateText];
+  
+  [self.flashStateButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+  [self.flashStateButton addTarget:self action:@selector(flashStateButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)flashStateButtonPressed:(id)sender
+{
+  [self.flashButtonController triggerButtonPress];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -286,6 +294,7 @@
             [backCamera unlockForConfiguration];
             
             [self.flashToggleButton setEnabled:YES];
+            [self.flashStateButton setEnabled:YES];
         }
         else{
             if ([backCamera isFlashModeSupported:AVCaptureFlashModeOff]) {
@@ -294,6 +303,7 @@
                 [backCamera unlockForConfiguration];
             }
             [self.flashToggleButton setEnabled:NO];
+            [self.flashStateButton setEnabled:NO];
         }
         
         NSError *error = nil;
@@ -306,6 +316,7 @@
     
     if (FrontCamera) {
         [self.flashToggleButton setEnabled:NO];
+        [self.flashStateButton setEnabled:NO];
         NSError *error = nil;
         AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
         if (!input) {
@@ -467,6 +478,7 @@
 - (void)disableCameraDeviceControls{
     self.cameraToggleButton.enabled = NO;
     self.flashToggleButton.enabled = NO;
+    self.flashStateButton.enabled = NO;
     self.photoCaptureButton.enabled = NO;
 }
 
@@ -605,25 +617,15 @@
   }
 }
 
-- (void)updateFlashButtonImage
+- (void)updateFlashButtonStateText
 {
-  NSString *imageName;
-  
-  switch (self.flashButtonController.state) {
-    case FlashButtonStateAuto: {
-      imageName = @"flash-auto";
-      break;
-    }
-    case FlashButtonStateOn: {
-      imageName = @"flash";
-      break;
-    }
-    case FlashButtonStateOff: {
-      imageName = @"flash-off";
-      break;
-    }
-  }
-  [self.flashToggleButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+  NSDictionary *flashStateToTextMapping = @{
+                            @(FlashButtonStateAuto) : @"Auto",
+                            @(FlashButtonStateOn) : @"On",
+                            @(FlashButtonStateOff) : @"Off"
+                           };
+  NSString *flashText = flashStateToTextMapping[@(self.flashButtonController.state)];
+  [self.flashStateButton setTitle:flashText forState:UIControlStateNormal];
 }
 
 #pragma mark - UI Control Helpers

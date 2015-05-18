@@ -12,6 +12,7 @@
                 <outlet property="cancelButton" destination="36" id="44"/>
                 <outlet property="captureImage" destination="h5e-Bx-TvZ" id="GzU-XD-Z0h"/>
                 <outlet property="confirmPhotoBar" destination="BAP-tb-Uiy" id="Efq-Y8-6Cu"/>
+                <outlet property="flashStateButton" destination="scN-8T-fzA" id="zWj-CH-LsU"/>
                 <outlet property="flashToggleButton" destination="77" id="78"/>
                 <outlet property="imagePreview" destination="UiP-kv-PWi" id="7CM-Yk-s5w"/>
                 <outlet property="libraryToggleButton" destination="83" id="88"/>
@@ -49,22 +50,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="34" userLabel="Photo tools toolbar">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77" userLabel="toggleFlash button">
-                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="44" id="mYk-Pz-hex"/>
-                                <constraint firstAttribute="width" secondItem="77" secondAttribute="height" multiplier="1:1" id="toV-nF-HoH"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                            <state key="normal" image="flash-off.png">
-                                <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <state key="selected" image="flash.png"/>
-                            <state key="highlighted">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tru-fm-NZa" userLabel="toggleGrid button">
                             <rect key="frame" x="138" y="0.0" width="44" height="44"/>
                             <constraints>
@@ -119,6 +104,29 @@
                                 <action selector="switchCamera:" destination="-1" eventType="touchUpInside" id="j6e-2e-AOj"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77" userLabel="toggleFlash button">
+                            <rect key="frame" x="0.0" y="9" width="44" height="28"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="44" id="mYk-Pz-hex"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                            <state key="normal" image="ic.flash.png">
+                                <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <state key="selected" image="flash.png"/>
+                            <state key="highlighted">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="scN-8T-fzA" userLabel="flashState button">
+                            <rect key="frame" x="37" y="9" width="41" height="28"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <state key="normal" title="State">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -127,10 +135,13 @@
                         <constraint firstItem="tru-fm-NZa" firstAttribute="top" secondItem="34" secondAttribute="top" id="Btm-rn-kI6"/>
                         <constraint firstItem="36" firstAttribute="top" secondItem="34" secondAttribute="top" constant="3" id="GCQ-Ze-7Nl"/>
                         <constraint firstAttribute="trailing" secondItem="37" secondAttribute="trailing" constant="3" id="M2y-G0-kPg"/>
+                        <constraint firstItem="77" firstAttribute="baseline" secondItem="tru-fm-NZa" secondAttribute="baseline" constant="1" id="VKB-Wq-ag2"/>
                         <constraint firstItem="77" firstAttribute="leading" secondItem="34" secondAttribute="leading" id="b2s-OF-qId"/>
-                        <constraint firstItem="77" firstAttribute="top" secondItem="34" secondAttribute="top" id="f6M-9N-Kat"/>
                         <constraint firstAttribute="centerX" secondItem="tru-fm-NZa" secondAttribute="centerX" id="ssX-sj-mdj"/>
                         <constraint firstItem="37" firstAttribute="top" secondItem="34" secondAttribute="top" id="tcl-TH-DBn"/>
+                        <constraint firstItem="scN-8T-fzA" firstAttribute="leading" secondItem="77" secondAttribute="trailing" constant="-7" id="wyp-rQ-6yx"/>
+                        <constraint firstItem="77" firstAttribute="baseline" secondItem="scN-8T-fzA" secondAttribute="baseline" constant="7" id="xfv-JB-9ZM"/>
+                        <constraint firstItem="77" firstAttribute="height" secondItem="scN-8T-fzA" secondAttribute="height" id="yDm-iI-is6"/>
                     </constraints>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BAP-tb-Uiy" userLabel="ConfirmPhoto toolbar">
@@ -276,10 +287,10 @@
     </objects>
     <resources>
         <image name="filter-close.png" width="29" height="28"/>
-        <image name="flash-off.png" width="25" height="25"/>
         <image name="flash.png" width="25" height="25"/>
         <image name="grid.png" width="320" height="320"/>
         <image name="ic-camera.png" width="22" height="22"/>
+        <image name="ic.flash.png" width="22" height="22"/>
         <image name="ic.grid.png" width="22" height="22"/>
         <image name="library.png" width="27" height="27"/>
         <image name="take-snap.png" width="94" height="94"/>

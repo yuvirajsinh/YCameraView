@@ -41,6 +41,11 @@
   }
 }
 
+- (void)triggerButtonPress
+{
+  [self buttonPressed];
+}
+
 - (AVCaptureFlashMode)flashMode
 {
   NSAssert(self.state < FlashButtonStateCount, @"invalid button state");

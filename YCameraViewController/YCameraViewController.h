@@ -18,16 +18,17 @@
 @property (nonatomic, assign) BOOL gridInitiallyHidden;
 @property (nonatomic, assign) BOOL shouldAutorotate;
 
-@property (nonatomic, strong) IBOutlet UIButton *photoCaptureButton;
-@property (nonatomic, strong) IBOutlet UIButton *cancelButton;
-@property (nonatomic, strong) IBOutlet UIButton *cameraToggleButton;
-@property (nonatomic, strong) IBOutlet UIButton *libraryToggleButton;
-@property (nonatomic, strong) IBOutlet UIButton *flashToggleButton;
-@property (retain, nonatomic) IBOutlet UIImageView *ImgViewGrid;
-@property (nonatomic, strong) IBOutlet UIView *photoBar;
-@property (nonatomic, strong) IBOutlet UIView *topBar;
-@property (retain, nonatomic) IBOutlet UIView *imagePreview;
-@property (retain, nonatomic) IBOutlet UIImageView *captureImage;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *photoCaptureButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *cancelButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *cameraToggleButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *libraryToggleButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *flashToggleButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *flashStateButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIImageView *ImgViewGrid;
+@property (nonatomic, unsafe_unretained) IBOutlet UIView *photoBar;
+@property (nonatomic, unsafe_unretained) IBOutlet UIView *topBar;
+@property (nonatomic, unsafe_unretained) IBOutlet UIView *imagePreview;
+@property (nonatomic, unsafe_unretained) IBOutlet UIImageView *captureImage;
 
 - (BOOL)gridEnabled;
 

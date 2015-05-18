@@ -12,6 +12,9 @@ typedef NS_ENUM(NSInteger, FlashButtonState) {
 };
 
 
+/**
+ Keeps track of Flash state
+ */
 @interface FlashButtonController : NSObject
 
 @property (nonatomic, readonly) FlashButtonState state;
@@ -22,5 +25,6 @@ typedef NS_ENUM(NSInteger, FlashButtonState) {
 - (instancetype)new __unavailable;
 
 - (instancetype)initWithButton:(UIButton *)button;
+- (void)triggerButtonPress;
 
 @end
