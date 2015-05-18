@@ -6,63 +6,41 @@
 //  Copyright (c) 2014 limbasiya.nirav@gmail.com. All rights reserved.
 //
 
-//
-//  ARC Helper
-#ifndef ah_retain
-#if __has_feature(objc_arc)
-#define ah_retain self
-#define ah_dealloc self
-#define release self
-#define autorelease self
-#else
-#define ah_retain retain
-#define ah_dealloc dealloc
-#define __bridge
-#endif
-#endif
-
-//  ARC Helper ends
-
 #import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
-#import <CoreMotion/CoreMotion.h>
 
 @protocol YCameraViewControllerDelegate;
 
-@interface YCameraViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>{
-    
-    UIImagePickerController *imgPicker;
-    BOOL pickerDidShow;
-    
-    //Today Implementation
-    BOOL FrontCamera;
-    BOOL haveImage;
-    BOOL initializeCamera, photoFromCam;
-    AVCaptureSession *session;
-    AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
-    AVCaptureStillImageOutput *stillImageOutput;
-    UIImage *croppedImageWithoutOrientation;
-}
-@property (nonatomic, readwrite) BOOL dontAllowResetRestaurant;
+
+@interface YCameraViewController : UIViewController
 
 @property (nonatomic, assign) id <YCameraViewControllerDelegate> delegate;
+@property (nonatomic, assign) BOOL prefersStatusBarHidden;
+@property (nonatomic, assign) BOOL gridInitiallyHidden;
+@property (nonatomic, assign) BOOL shouldAutorotate;
 
-#pragma mark -
-@property (nonatomic, strong) IBOutlet UIButton *photoCaptureButton;
-@property (nonatomic, strong) IBOutlet UIButton *cancelButton;
-@property (nonatomic, strong) IBOutlet UIButton *cameraToggleButton;
-@property (nonatomic, strong) IBOutlet UIButton *libraryToggleButton;
-@property (nonatomic, strong) IBOutlet UIButton *flashToggleButton;
-@property (retain, nonatomic) IBOutlet UIImageView *ImgViewGrid;
-@property (nonatomic, strong) IBOutlet UIView *photoBar;
-@property (nonatomic, strong) IBOutlet UIView *topBar;
-@property (retain, nonatomic) IBOutlet UIView *imagePreview;
-@property (retain, nonatomic) IBOutlet UIImageView *captureImage;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *photoCaptureButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *cancelButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *cameraToggleButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *libraryToggleButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *flashToggleButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *flashStateButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIImageView *ImgViewGrid;
+@property (nonatomic, unsafe_unretained) IBOutlet UIView *photoBar;
+@property (nonatomic, unsafe_unretained) IBOutlet UIView *topBar;
+@property (nonatomic, unsafe_unretained) IBOutlet UIView *imagePreview;
+@property (nonatomic, unsafe_unretained) IBOutlet UIImageView *captureImage;
+
+- (BOOL)gridEnabled;
 
 @end
 
+
 @protocol YCameraViewControllerDelegate <NSObject>
-- (void)didFinishPickingImage:(UIImage *)image;
-- (void)yCameraControllerDidCancel;
-- (void)yCameraControllerdidSkipped;
+
+@optional
+- (void)yCameraController:(YCameraViewController *)cameraController didFinishPickingImage:(UIImage *)image;
+- (void)yCameraControllerDidCancel:(YCameraViewController *)cameraController;
+- (void)yCameraControllerDidSkip:(YCameraViewController *)cameraController;
+- (void)yCameraController:(YCameraViewController *)cameraController didToggleGridEnabled:(BOOL)gridEnabled;
+
 @end

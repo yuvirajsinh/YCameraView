@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		313873EB1B080AF40088CDA7 /* take-snap@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 313873EA1B080AF40088CDA7 /* take-snap@3x.png */; };
 		8B33A3B318E2D3CE0006B13B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B33A3B218E2D3CE0006B13B /* UIKit.framework */; };
 		8B33A3B518E2D3CE0006B13B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B33A3B418E2D3CE0006B13B /* Foundation.framework */; };
 		8B33A3B718E2D3CE0006B13B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B33A3B618E2D3CE0006B13B /* CoreGraphics.framework */; };
@@ -47,6 +48,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		313873EA1B080AF40088CDA7 /* take-snap@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "take-snap@3x.png"; sourceTree = "<group>"; };
 		8B33A3AE18E2D3CE0006B13B /* YCameraViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YCameraViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B33A3B218E2D3CE0006B13B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8B33A3B418E2D3CE0006B13B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -202,6 +204,7 @@
 				8B33A3EC18E2D5550006B13B /* micro_carbon@2x.png */,
 				8B33A3ED18E2D5550006B13B /* take-snap.png */,
 				8B33A3EE18E2D5550006B13B /* take-snap@2x.png */,
+				313873EA1B080AF40088CDA7 /* take-snap@3x.png */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 				8B33A3FA18E2D5550006B13B /* front-camera.png in Resources */,
 				8B33A3FB18E2D5550006B13B /* front-camera@2x.png in Resources */,
 				8B33A3FC18E2D5550006B13B /* grid-icon.png in Resources */,
+				313873EB1B080AF40088CDA7 /* take-snap@3x.png in Resources */,
 				8B33A3FD18E2D5550006B13B /* grid-icon@2x.png in Resources */,
 				8B33A3FE18E2D5550006B13B /* grid@2x.png in Resources */,
 				8B33A3FF18E2D5550006B13B /* library.png in Resources */,

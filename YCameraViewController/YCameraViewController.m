@@ -7,63 +7,124 @@
 //
 
 #import "YCameraViewController.h"
+#import "FlashButtonController.h"
 #import <ImageIO/ImageIO.h>
+#import <AVFoundation/AVFoundation.h>
+#import <CoreMotion/CoreMotion.h>
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
-@interface YCameraViewController (){
-    UIInterfaceOrientation orientationLast, orientationAfterProcess;
-    CMMotionManager *motionManager;
+
+//  ARC Helper
+#ifndef ah_retain
+#if __has_feature(objc_arc)
+#define ah_retain self
+#define ah_dealloc self
+#define release self
+#define autorelease self
+#else
+#define ah_retain retain
+#define ah_dealloc dealloc
+#define __bridge
+#endif
+#endif
+//  ARC Helper ends
+
+
+@interface YCameraViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+{
+  UIInterfaceOrientation orientationLast, orientationAfterProcess;
+  
+  /**
+   This is used so that photos taken in landscape are rotated to portrait. Not sure why accelerator reading is used (instead of
+   UIDeviceOrientationDidChangeNotification).
+   */
+  CMMotionManager *motionManager;
+  
+  UIImagePickerController *imgPicker;
+  BOOL pickerDidShow;
+  
+  BOOL FrontCamera;
+  BOOL haveImage;
+  BOOL initializeCamera, photoFromCam;
+  AVCaptureSession *session;
+  AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
+  AVCaptureStillImageOutput *stillImageOutput;
+  UIImage *croppedImageWithoutOrientation;
 }
+
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *toggleGridButton;
+@property (strong, nonatomic) FlashButtonController* flashButtonController;
+@property (unsafe_unretained, nonatomic) IBOutlet UIView *confirmPhotoBar;
+
 @end
 
-@implementation YCameraViewController
-@synthesize delegate;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+@implementation YCameraViewController
+
+- (instancetype)init
+{
+  return [[YCameraViewController alloc] initWithNibName:@"YCameraViewController" bundle:nil];
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    //    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
-    //        self.edgesForExtendedLayout = UIRectEdgeNone;
-    //    }
-    
-    self.navigationController.navigationBarHidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-    
-	// Do any additional setup after loading the view.
-    pickerDidShow = NO;
-    
-    FrontCamera = NO;
-    self.captureImage.hidden = YES;
-    
-    // Setup UIImagePicker Controller
-    imgPicker = [[UIImagePickerController alloc] init];
-    imgPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imgPicker.delegate = self;
-    imgPicker.allowsEditing = YES;
-    
-    croppedImageWithoutOrientation = [[UIImage alloc] init];
-    
-    initializeCamera = YES;
-    photoFromCam = YES;
-    
-    // Initialize Motion Manager
-    [self initializeMotionManager];
+  [super viewDidLoad];
+
+  self.navigationController.navigationBarHidden = YES;
+  [self.navigationController setNavigationBarHidden:YES];
+  
+  // Do any additional setup after loading the view.
+  pickerDidShow = NO;
+  
+  FrontCamera = NO;
+  self.captureImage.hidden = YES;
+  
+  // Setup UIImagePicker Controller
+  imgPicker = [UIImagePickerController new];
+  imgPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+  imgPicker.delegate = self;
+  imgPicker.allowsEditing = YES;
+  
+  croppedImageWithoutOrientation = [[UIImage alloc] init];
+  
+  initializeCamera = YES;
+  photoFromCam = YES;
+
+  [self initializeMotionManager];
+  
+  if (self.gridInitiallyHidden) {
+    [self gridToogle:self.toggleGridButton];
+  }
+  
+  [self setupFlashButton];
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+- (void)setupFlashButton
+{
+  self.flashButtonController = [[FlashButtonController alloc] initWithButton:self.flashToggleButton];
+  __weak typeof(self) weakSelf = self;
+  self.flashButtonController.buttonPressedBlock = ^() {
+    [weakSelf toggleFlash:nil];
+    [weakSelf updateFlashButtonStateText];
+  };
+  [self updateFlashButtonStateText];
+  
+  [self.flashStateButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+  [self.flashStateButton addTarget:self action:@selector(flashStateButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)flashStateButtonPressed:(id)sender
+{
+  [self.flashButtonController triggerButtonPress];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -71,27 +132,16 @@
     
     if (initializeCamera){
         initializeCamera = NO;
-        
-        // Initialize camera
         [self initializeCamera];
     }
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [session stopRunning];
-    //    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-    //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
--(void) dealloc
+- (void)dealloc
 {
     [_imagePreview release];
     [_captureImage release];
@@ -108,66 +158,77 @@
         [stillImageOutput release], stillImageOutput=nil;
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+  return _prefersStatusBarHidden;
+}
+
+- (BOOL)shouldAutorotate
+{
+  return _shouldAutorotate;
+}
+
 #pragma mark - CoreMotion Task
+
 - (void)initializeMotionManager{
-    motionManager = [[CMMotionManager alloc] init];
-    motionManager.accelerometerUpdateInterval = .2;
-    motionManager.gyroUpdateInterval = .2;
-    
-    [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
-                                        withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
-                                            if (!error) {
-                                                [self outputAccelertionData:accelerometerData.acceleration];
-                                            }
-                                            else{
-                                                NSLog(@"%@", error);
-                                            }
-                                        }];
+  motionManager = [[CMMotionManager alloc] init];
+  motionManager.accelerometerUpdateInterval = .2;
+  motionManager.gyroUpdateInterval = .2;
+  
+  [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
+                                      withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+                                        if (!error) {
+                                          [self outputAccelertionData:accelerometerData.acceleration];
+                                        }
+                                        else{
+                                          NSLog(@"%@", error);
+                                        }
+                                      }];
 }
 
 #pragma mark - UIAccelerometer callback
 
 - (void)outputAccelertionData:(CMAcceleration)acceleration{
-    UIInterfaceOrientation orientationNew;
-    
-    if (acceleration.x >= 0.75) {
-        orientationNew = UIInterfaceOrientationLandscapeLeft;
-    }
-    else if (acceleration.x <= -0.75) {
-        orientationNew = UIInterfaceOrientationLandscapeRight;
-    }
-    else if (acceleration.y <= -0.75) {
-        orientationNew = UIInterfaceOrientationPortrait;
-    }
-    else if (acceleration.y >= 0.75) {
-        orientationNew = UIInterfaceOrientationPortraitUpsideDown;
-    }
-    else {
-        // Consider same as last time
-        return;
-    }
-    
-    if (orientationNew == orientationLast)
-        return;
-    
-    //    NSLog(@"Going from %@ to %@!", [[self class] orientationToText:orientationLast], [[self class] orientationToText:orientationNew]);
-    
-    orientationLast = orientationNew;
+  UIInterfaceOrientation orientationNew;
+  
+  if (acceleration.x >= 0.75) {
+    orientationNew = UIInterfaceOrientationLandscapeLeft;
+  }
+  else if (acceleration.x <= -0.75) {
+    orientationNew = UIInterfaceOrientationLandscapeRight;
+  }
+  else if (acceleration.y <= -0.75) {
+    orientationNew = UIInterfaceOrientationPortrait;
+  }
+  else if (acceleration.y >= 0.75) {
+    orientationNew = UIInterfaceOrientationPortraitUpsideDown;
+  }
+  else {
+    // Consider same as last time
+    return;
+  }
+  
+  if (orientationNew == orientationLast)
+    return;
+  
+  //    NSLog(@"Going from %@ to %@!", [[self class] orientationToText:orientationLast], [[self class] orientationToText:orientationNew]);
+  
+  orientationLast = orientationNew;
 }
 
 #ifdef DEBUG
 +(NSString*)orientationToText:(const UIInterfaceOrientation)ORIENTATION {
-    switch (ORIENTATION) {
-        case UIInterfaceOrientationPortrait:
-            return @"UIInterfaceOrientationPortrait";
-        case UIInterfaceOrientationPortraitUpsideDown:
-            return @"UIInterfaceOrientationPortraitUpsideDown";
-        case UIInterfaceOrientationLandscapeLeft:
-            return @"UIInterfaceOrientationLandscapeLeft";
-        case UIInterfaceOrientationLandscapeRight:
-            return @"UIInterfaceOrientationLandscapeRight";
-    }
-    return @"Unknown orientation!";
+  switch (ORIENTATION) {
+    case UIInterfaceOrientationPortrait:
+      return @"UIInterfaceOrientationPortrait";
+    case UIInterfaceOrientationPortraitUpsideDown:
+      return @"UIInterfaceOrientationPortraitUpsideDown";
+    case UIInterfaceOrientationLandscapeLeft:
+      return @"UIInterfaceOrientationLandscapeLeft";
+    case UIInterfaceOrientationLandscapeRight:
+      return @"UIInterfaceOrientationLandscapeRight";
+  }
+  return @"Unknown orientation!";
 }
 #endif
 
@@ -229,13 +290,11 @@
         
         if ([backCamera hasFlash]){
             [backCamera lockForConfiguration:nil];
-            if (self.flashToggleButton.selected)
-                [backCamera setFlashMode:AVCaptureFlashModeOn];
-            else
-                [backCamera setFlashMode:AVCaptureFlashModeOff];
+            [backCamera setFlashMode:self.flashButtonController.flashMode];
             [backCamera unlockForConfiguration];
             
             [self.flashToggleButton setEnabled:YES];
+            [self.flashStateButton setEnabled:YES];
         }
         else{
             if ([backCamera isFlashModeSupported:AVCaptureFlashModeOff]) {
@@ -244,6 +303,7 @@
                 [backCamera unlockForConfiguration];
             }
             [self.flashToggleButton setEnabled:NO];
+            [self.flashStateButton setEnabled:NO];
         }
         
         NSError *error = nil;
@@ -256,6 +316,7 @@
     
     if (FrontCamera) {
         [self.flashToggleButton setEnabled:NO];
+        [self.flashStateButton setEnabled:NO];
         NSError *error = nil;
         AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
         if (!input) {
@@ -335,7 +396,7 @@
     return newImage;
 }
 
-- (void) processImage:(UIImage *)image { //process captured image, crop, resize and rotate
+- (void)processImage:(UIImage *)image { //process captured image, crop, resize and rotate
     haveImage = YES;
     photoFromCam = YES;
     
@@ -401,12 +462,23 @@
     
     // Hide Top/Bottom controller after taking photo for editing
     [self hideControllers];
+  
+    [self showConfirmPhotoBar];
+}
+
+#pragma mark - Accessors
+
+- (BOOL)gridEnabled
+{
+  return !(self.toggleGridButton.selected);
 }
 
 #pragma mark - Device Availability Controls
+
 - (void)disableCameraDeviceControls{
     self.cameraToggleButton.enabled = NO;
     self.flashToggleButton.enabled = NO;
+    self.flashStateButton.enabled = NO;
     self.photoCaptureButton.enabled = NO;
 }
 
@@ -438,72 +510,64 @@
 }
 
 #pragma mark - Button clicks
-- (IBAction)gridToogle:(UIButton *)sender{
+
+- (IBAction)gridToogle:(UIButton *)sender {
+    CGFloat gridToggleAnimationDuration = 0.2;
+  
     if (sender.selected) {
         sender.selected = NO;
-        [UIView animateWithDuration:0.2 delay:0.0 options:0 animations:^{
+        [UIView animateWithDuration:gridToggleAnimationDuration delay:0.0 options:0 animations:^{
             self.ImgViewGrid.alpha = 1.0f;
         } completion:nil];
     }
     else{
         sender.selected = YES;
-        [UIView animateWithDuration:0.2 delay:0.0 options:0 animations:^{
+        [UIView animateWithDuration:gridToggleAnimationDuration delay:0.0 options:0 animations:^{
             self.ImgViewGrid.alpha = 0.0f;
         } completion:nil];
+    }
+  
+    if ([self.delegate respondsToSelector:@selector(yCameraController:didToggleGridEnabled:)]) {
+        [self.delegate yCameraController:self didToggleGridEnabled:sender.selected];
     }
 }
 
 -(IBAction)switchToLibrary:(id)sender {
-    
-    if (session) {
-        [session stopRunning];
-    }
-    
-    //    self.captureImage = nil;
-    
-    //    UIImagePickerController* imagePickerController = [[UIImagePickerController alloc] init];
-    //    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    //    imagePickerController.delegate = self;
-    //    imagePickerController.allowsEditing = YES;
-    [self presentViewController:imgPicker animated:YES completion:NULL];
+  if (session) {
+    [session stopRunning];
+  }
+  [self presentViewController:imgPicker animated:YES completion:NULL];
 }
 
-- (IBAction)skipped:(id)sender{
-    
-    if ([delegate respondsToSelector:@selector(yCameraControllerdidSkipped)]) {
-        [delegate yCameraControllerdidSkipped];
-    }
-    
-    // Dismiss self view controller
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (IBAction)skipped:(id)sender {
+  if ([self.delegate respondsToSelector:@selector(yCameraControllerdidSkipped:)]) {
+    [self.delegate yCameraControllerDidSkip:self];
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(IBAction) cancel:(id)sender {
-    if ([delegate respondsToSelector:@selector(yCameraControllerDidCancel)]) {
-        [delegate yCameraControllerDidCancel];
-    }
-    
-    // Dismiss self view controller
-    [self dismissViewControllerAnimated:YES completion:nil];
+-(IBAction)cancel:(id)sender {
+  if ([self.delegate respondsToSelector:@selector(yCameraControllerDidCancel:)]) {
+    [self.delegate yCameraControllerDidCancel:self];
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)donePhotoCapture:(id)sender{
-    
-    if ([delegate respondsToSelector:@selector(didFinishPickingImage:)]) {
-        [delegate didFinishPickingImage:self.captureImage.image];
-    }
-    
-    // Dismiss self view controller
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (IBAction)donePhotoCapture:(id)sender {
+  if ([self.delegate respondsToSelector:@selector(yCameraController:didFinishPickingImage:)]) {
+    [self.delegate yCameraController:self didFinishPickingImage:self.captureImage.image];
+  }
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)retakePhoto:(id)sender{
+- (IBAction)retakePhoto:(id)sender {
     [self.photoCaptureButton setEnabled:YES];
     self.captureImage.image = nil;
     self.imagePreview.hidden = NO;
-    // Show Camera device controls
+  
     [self showControllers];
-    
+    [self hideConfirmPhotoBar];
+  
     haveImage=NO;
     FrontCamera = NO;
 //    [self performSelector:@selector(initializeCamera) withObject:nil afterDelay:0.001];
@@ -526,74 +590,80 @@
     }
 }
 
-- (IBAction)toogleFlash:(UIButton *)sender{
-    if (!FrontCamera) {
-        if (sender.selected) { // Set flash off
-            [sender setSelected:NO];
-            
-            NSArray *devices = [AVCaptureDevice devices];
-            for (AVCaptureDevice *device in devices) {
-                
-                NSLog(@"Device name: %@", [device localizedName]);
-                
-                if ([device hasMediaType:AVMediaTypeVideo]) {
-                    
-                    if ([device position] == AVCaptureDevicePositionBack) {
-                        NSLog(@"Device position : back");
-                        if ([device hasFlash]){
-                            
-                            [device lockForConfiguration:nil];
-                            [device setFlashMode:AVCaptureFlashModeOff];
-                            [device unlockForConfiguration];
-                            
-                            break;
-                        }
-                    }
-                }
-            }
-            
+- (void)toggleFlash:(id)sender {
+  if (FrontCamera) {
+    return;
+  }
+  
+  NSArray *devices = [AVCaptureDevice devices];
+  for (AVCaptureDevice *device in devices) {
+    
+    NSLog(@"Device name: %@", [device localizedName]);
+    
+    if ([device hasMediaType:AVMediaTypeVideo]) {
+      
+      if ([device position] == AVCaptureDevicePositionBack) {
+        NSLog(@"Device position : back");
+        if ([device hasFlash]){
+          
+          [device lockForConfiguration:nil];
+          [device setFlashMode:self.flashButtonController.flashMode];
+          [device unlockForConfiguration];
+          
+          break;
         }
-        else{                  // Set flash on
-            [sender setSelected:YES];
-            
-            NSArray *devices = [AVCaptureDevice devices];
-            for (AVCaptureDevice *device in devices) {
-                
-                NSLog(@"Device name: %@", [device localizedName]);
-                
-                if ([device hasMediaType:AVMediaTypeVideo]) {
-                    
-                    if ([device position] == AVCaptureDevicePositionBack) {
-                        NSLog(@"Device position : back");
-                        if ([device hasFlash]){
-                            
-                            [device lockForConfiguration:nil];
-                            [device setFlashMode:AVCaptureFlashModeOn];
-                            [device unlockForConfiguration];
-                            
-                            break;
-                        }
-                    }
-                }
-            }
-            
-        }
+      }
     }
+  }
+}
+
+- (void)updateFlashButtonStateText
+{
+  NSDictionary *flashStateToTextMapping = @{
+                            @(FlashButtonStateAuto) : @"Auto",
+                            @(FlashButtonStateOn) : @"On",
+                            @(FlashButtonStateOff) : @"Off"
+                           };
+  NSString *flashText = flashStateToTextMapping[@(self.flashButtonController.state)];
+  [self.flashStateButton setTitle:flashText forState:UIControlStateNormal];
 }
 
 #pragma mark - UI Control Helpers
+
 - (void)hideControllers{
-    [UIView animateWithDuration:0.2 animations:^{
-        self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y+116.0);
-        self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y-44.0);
-    } completion:nil];
+  [UIView animateWithDuration:0.2 animations:^{
+    //1)animate them out of screen
+    self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y+116.0);
+    self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y-44.0);
+    
+    //2)actually hide them
+    self.photoBar.alpha = 0.0;
+    self.topBar.alpha = 0.0;
+    
+  } completion:nil];
 }
 
 - (void)showControllers{
-    [UIView animateWithDuration:0.2 animations:^{
-        self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y-116.0);
-        self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y+44.0);
-    } completion:nil];
+  [UIView animateWithDuration:0.2 animations:^{
+    //1)animate them into screen
+    self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y-116.0);
+    self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y+44.0);
+    
+    //2)actually show them
+    self.photoBar.alpha = 1.0;
+    self.topBar.alpha = 1.0;
+    
+  } completion:nil];
+}
+
+- (void)showConfirmPhotoBar
+{
+  self.confirmPhotoBar.hidden = NO;
+}
+
+- (void)hideConfirmPhotoBar
+{
+  self.confirmPhotoBar.hidden = YES;
 }
 
 @end
