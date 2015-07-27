@@ -7,6 +7,7 @@
 //
 
 #import "YCameraViewController.h"
+#import "AppDelegate.h"
 #import <ImageIO/ImageIO.h>
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
@@ -166,6 +167,8 @@
             return @"UIInterfaceOrientationLandscapeLeft";
         case UIInterfaceOrientationLandscapeRight:
             return @"UIInterfaceOrientationLandscapeRight";
+        case UIInterfaceOrientationUnknown:
+            return @"UIInterfaceOrientationUnknown";
     }
     return @"Unknown orientation!";
 }
@@ -248,8 +251,15 @@
         
         NSError *error = nil;
         AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
-        if (!input) {
+        if (error) {
             NSLog(@"ERROR: trying to open camera: %@", error);
+            [[[UIAlertView alloc] initWithTitle:error.localizedDescription
+                                       message:error.localizedFailureReason
+                                      delegate:nil
+                             cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil] show];
+            [self cancel:self.cancelButton];
+            return;
         }
         [session addInput:input];
     }
@@ -354,7 +364,7 @@
     //    assetOrientation = ALAssetOrientationUp;
     
     // adjust image orientation
-    NSLog(@"orientation: %d",orientationLast);
+    NSLog(@"orientation: %ld",orientationLast);
     orientationAfterProcess = orientationLast;
     switch (orientationLast) {
         case UIInterfaceOrientationPortrait:
@@ -478,7 +488,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(IBAction) cancel:(id)sender {
+- (IBAction)cancel:(id)sender {
     if ([delegate respondsToSelector:@selector(yCameraControllerDidCancel)]) {
         [delegate yCameraControllerDidCancel];
     }
@@ -584,15 +594,27 @@
 #pragma mark - UI Control Helpers
 - (void)hideControllers{
     [UIView animateWithDuration:0.2 animations:^{
+        //1)animate them out of screen
         self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y+116.0);
         self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y-44.0);
+        
+        //2)actually hide them
+        self.photoBar.alpha = 0.0;
+        self.topBar.alpha = 0.0;
+        
     } completion:nil];
 }
 
 - (void)showControllers{
     [UIView animateWithDuration:0.2 animations:^{
+        //1)animate them into screen
         self.photoBar.center = CGPointMake(self.photoBar.center.x, self.photoBar.center.y-116.0);
         self.topBar.center = CGPointMake(self.topBar.center.x, self.topBar.center.y+44.0);
+        
+        //2)actually show them
+        self.photoBar.alpha = 1.0;
+        self.topBar.alpha = 1.0;
+        
     } completion:nil];
 }
 
