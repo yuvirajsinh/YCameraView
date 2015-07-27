@@ -3,11 +3,10 @@
 //  NoshedItStaging
 //
 //  Created by yuvraj on 08/01/14.
-//  Copyright (c) 2014 limbasiya.nirav@gmail.com. All rights reserved.
+//  Copyright (c) 2014 yuviraj.jadeja@gmail.com. All rights reserved.
 //
 
 #import "YCameraViewController.h"
-#import "AppDelegate.h"
 #import <ImageIO/ImageIO.h>
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)

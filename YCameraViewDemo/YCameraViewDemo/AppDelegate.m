@@ -2,8 +2,8 @@
 //  AppDelegate.m
 //  YCameraViewDemo
 //
-//  Created by yuvraj on 27/07/15.
-//  Copyright (c) 2015 rapidops. All rights reserved.
+//  Created by yuvraj on 08/01/14.
+//  Copyright (c) 2014 yuviraj.jadeja@gmail.com. All rights reserved.
 //
 
 #import "AppDelegate.h"
