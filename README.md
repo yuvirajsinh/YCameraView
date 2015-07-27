@@ -1,6 +1,8 @@
 YCameraView
 ===========
 
+![Version](https://img.shields.io/badge/pod-v1.0.1-green.svg?style=flat) ![License](http://img.shields.io/badge/license-MIT-orange.png)
+
 Custom Camera Controller
 
 YCameraviewController is a custom Image picker controller that allows you to quickly switch between Camera and iPhone Photo Library.
@@ -14,6 +16,14 @@ AVFoundation.framework
 ImageIO.framework
 
 CoreMotion.framework
+
+## Installation
+
+#### [CocoaPods](http://cocoapods.org)
+
+```objc
+pod 'YCameraView', '~> 1.0.1'
+````
 
 How to Use it
 =============
