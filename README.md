@@ -1,7 +1,7 @@
 YCameraView
 ===========
 
-![Version](https://img.shields.io/badge/pod-v1.0.1-green.svg?style=flat) ![License](http://img.shields.io/badge/license-MIT-orange.png)
+![Version](https://img.shields.io/badge/pod-v1.1.0-green.svg) ![License](http://img.shields.io/badge/license-MIT-orange.png)
 
 Custom Camera Controller
 
@@ -22,7 +22,7 @@ CoreMotion.framework
 #### [CocoaPods](http://cocoapods.org)
 
 ```objc
-pod 'YCameraView', '~> 1.0.1'
+pod 'YCameraView', '~> 1.1.0'
 ````
 
 How to Use it
