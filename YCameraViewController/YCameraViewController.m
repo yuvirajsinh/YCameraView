@@ -57,6 +57,9 @@
     initializeCamera = YES;
     photoFromCam = YES;
     
+    // Set auto-flash initially
+    self.flashToggleButton.tag = AVCaptureFlashModeAuto;
+    
     // Initialize Motion Manager
     [self initializeMotionManager];
 }
@@ -231,10 +234,15 @@
         
         if ([backCamera hasFlash]){
             [backCamera lockForConfiguration:nil];
-            if (self.flashToggleButton.selected)
+            if (self.flashToggleButton.tag==AVCaptureFlashModeAuto){
+                [backCamera setFlashMode:AVCaptureFlashModeAuto];
+            }
+            else if(self.flashToggleButton.tag==AVCaptureFlashModeOn){
                 [backCamera setFlashMode:AVCaptureFlashModeOn];
-            else
+            }
+            else{
                 [backCamera setFlashMode:AVCaptureFlashModeOff];
+            }
             [backCamera unlockForConfiguration];
             
             [self.flashToggleButton setEnabled:YES];
@@ -537,55 +545,42 @@
 
 - (IBAction)toogleFlash:(UIButton *)sender{
     if (!FrontCamera) {
-        if (sender.selected) { // Set flash off
-            [sender setSelected:NO];
+        
+        NSArray *devices = [AVCaptureDevice devices];
+        for (AVCaptureDevice *device in devices) {
             
-            NSArray *devices = [AVCaptureDevice devices];
-            for (AVCaptureDevice *device in devices) {
-                
-                NSLog(@"Device name: %@", [device localizedName]);
-                
-                if ([device hasMediaType:AVMediaTypeVideo]) {
-                    
-                    if ([device position] == AVCaptureDevicePositionBack) {
-                        NSLog(@"Device position : back");
-                        if ([device hasFlash]){
-                            
-                            [device lockForConfiguration:nil];
-                            [device setFlashMode:AVCaptureFlashModeOff];
-                            [device unlockForConfiguration];
-                            
-                            break;
-                        }
-                    }
-                }
-            }
+            NSLog(@"Device name: %@", [device localizedName]);
             
-        }
-        else{                  // Set flash on
-            [sender setSelected:YES];
-            
-            NSArray *devices = [AVCaptureDevice devices];
-            for (AVCaptureDevice *device in devices) {
+            if ([device hasMediaType:AVMediaTypeVideo]) {
                 
-                NSLog(@"Device name: %@", [device localizedName]);
-                
-                if ([device hasMediaType:AVMediaTypeVideo]) {
-                    
-                    if ([device position] == AVCaptureDevicePositionBack) {
-                        NSLog(@"Device position : back");
-                        if ([device hasFlash]){
-                            
-                            [device lockForConfiguration:nil];
+                if ([device position] == AVCaptureDevicePositionBack) {
+                    NSLog(@"Device position : back");
+                    if ([device hasFlash]){
+                        
+                        [device lockForConfiguration:nil];
+                        
+                        if (sender.tag==AVCaptureFlashModeAuto) { // Current flash mode is Auto, set it to On
                             [device setFlashMode:AVCaptureFlashModeOn];
-                            [device unlockForConfiguration];
-                            
-                            break;
+                            sender.tag = AVCaptureFlashModeOn;
+                            [sender setImage:[UIImage imageNamed:@"flash"] forState:UIControlStateNormal];
                         }
+                        else if (sender.tag==AVCaptureFlashModeOn){ // Current flash mode is On, set it to Off
+                            [device setFlashMode:AVCaptureFlashModeOff];
+                            sender.tag = AVCaptureFlashModeOff;
+                            [sender setImage:[UIImage imageNamed:@"flash-off"] forState:UIControlStateNormal];
+                        }
+                        else{ // Current flash mode is Off, set it to Auto
+                            [device setFlashMode:AVCaptureFlashModeAuto];
+                            sender.tag = AVCaptureFlashModeAuto;
+                            [sender setImage:[UIImage imageNamed:@"flash-auto"] forState:UIControlStateNormal];
+                        }
+                        
+                        [device unlockForConfiguration];
+                        
+                        break;
                     }
                 }
             }
-            
         }
     }
 }

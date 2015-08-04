@@ -190,7 +190,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0620;
-				ORGANIZATIONNAME = rapidops;
+				ORGANIZATIONNAME = yuvrajsinh;
 				TargetAttributes = {
 					8B153F441B66498C00DF40C2 = {
 						CreatedOnToolsVersion = 6.2;
