@@ -34,7 +34,10 @@ static NSString * nibName = @"YCameraViewController";
 //Designated initializer. External classes should not need to know the nib name to instantiate the CameraController, so we define it internally
 -(instancetype)init
 {
-    self = [super initWithNibName:nibName bundle:nil];
+    //when using frameworks, the bundle needs to be specified
+    NSBundle * bundle = [NSBundle bundleForClass:self.class];
+    
+    self = [super initWithNibName:nibName bundle:bundle];
     if (self) {
         // Custom initialization
     }
