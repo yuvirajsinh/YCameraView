@@ -20,6 +20,8 @@
 @implementation YCameraViewController
 @synthesize delegate;
 
+static NSString * nibName = @"YCameraViewController";
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -27,6 +29,22 @@
         // Custom initialization
     }
     return self;
+}
+
+//Designated initializer. External classes should not need to know the nib name to instantiate the CameraController, so we define it internally
+-(instancetype)init
+{
+    self = [super initWithNibName:nibName bundle:nil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+//Hide status bar. otherwise, it will interfere with camera UI.
+-(BOOL)prefersStatusBarHidden {
+    
+    return YES;
 }
 
 - (void)viewDidLoad
