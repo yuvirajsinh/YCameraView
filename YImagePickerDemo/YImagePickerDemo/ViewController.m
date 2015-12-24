@@ -29,7 +29,7 @@
 #pragma mark - Button clicks
 
 - (IBAction)takePhoto:(id)sender{
-    YCameraViewController *camController = [[YCameraViewController alloc] initWithNibName:@"YCameraViewController" bundle:nil];
+    YCameraViewController *camController = [[YCameraViewController alloc] init];
     camController.delegate=self;
     [self presentViewController:camController animated:YES completion:^{
         // completion code

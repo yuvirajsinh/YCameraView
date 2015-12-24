@@ -12,6 +12,7 @@
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
+
 @interface YCameraViewController (){
     UIInterfaceOrientation orientationLast, orientationAfterProcess;
     CMMotionManager *motionManager;
@@ -21,13 +22,22 @@
 @implementation YCameraViewController
 @synthesize delegate;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+static NSString * nibName = @"YCameraViewController";
+
+//Designated initializer. External classes should not need to know the nib name to instantiate the CameraController, so we define it internally
+-(instancetype)init
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibName bundle:nil];
     if (self) {
         // Custom initialization
     }
     return self;
+}
+
+//Hide status bar. otherwise, it will interfere with camera UI.
+-(BOOL)prefersStatusBarHidden {
+    
+    return YES;
 }
 
 - (void)viewDidLoad
