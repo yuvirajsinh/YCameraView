@@ -59,4 +59,4 @@ Using YCameraViewControllerDelegate
 }
 ```
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TLYC7S2GS34A4&name=os0=Coffe)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TLYC7S2GS34A4&os0=Coffe)
